@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Studio - Premium Product Design Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Geist', 'sans-serif'],
+                    },
+                    colors: {
+                        neutral: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        brand: {
+                            indigo: '#6366f1',
+                            violet: '#8b5cf6',
+                            rose: '#f43f5e',
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 40s linear infinite',
+                        'clip-in': 'clipIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) both',
+                        'fade-up': 'fadeUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        clipIn: {
+                            '0%': { opacity: '0', clipPath: 'inset(0 0 100% 0)' },
+                            '100%': { opacity: '1', clipPath: 'inset(0 0 0 0)' },
+                        },
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Utilities */
+        .glass-panel {
+            background: rgba(248, 250, 252, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(226, 232, 240, 0.7);
+        }
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        /* Spotlight Effect */
+        .spotlight-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(99, 102, 241, 0.15), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
+        /* Border Gradient Button */
+        .btn-gradient-border {
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            background-clip: padding-box;
+            border: 1px solid transparent;
+            border-radius: 9999px;
+        }
+        .btn-gradient-border::after {
+            content: '';
+            position: absolute;
+            top: -1px; bottom: -1px; left: -1px; right: -1px;
+            background: linear-gradient(to right, #e2e8f0, #94a3b8, #e2e8f0);
+            z-index: -1;
+            border-radius: 9999px;
+        }
+        /* 3D Carousel Styles */
+        .carousel-container {
+            perspective: 1000px;
+        }
+        .carousel-card {
+            position: absolute;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+            opacity: 0;
+        }
+        .carousel-card.active {
+            transform: translateX(0) scale(1) translateZ(0);
+            opacity: 1;
+            z-index: 20;
+        }
+        .carousel-card.prev {
+            transform: translateX(-110%) scale(0.85) translateZ(-50px) rotateY(5deg);
+            opacity: 0.6;
+            z-index: 10;
+            filter: blur(2px);
+        }
+        .carousel-card.next {
+            transform: translateX(110%) scale(0.85) translateZ(-50px) rotateY(-5deg);
+            opacity: 0.6;
+            z-index: 10;
+            filter: blur(2px);
+        }
+        /* Vertical Lines Background */
+        .grid-lines {
+            background-size: 20% 100%;
+            background-image: linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap">
+</head>
+<body class="min-h-screen overflow-x-hidden selection:bg-brand-indigo/20 selection:text-neutral-900 text-neutral-900 bg-neutral-50 relative font-sans">
+
+    <!-- Background Grid Lines -->
+    <div class="fixed grid-lines w-full h-full top-0 right-0 bottom-0 left-0"></div>
+
+    <div class="relative z-10 flex flex-col lg:flex-row min-h-screen max-w-[1600px] mx-auto">
+        
+        <!-- Sidebar / Navigation -->
+        <aside class="lg:w-64 lg:fixed lg:h-screen flex flex-col z-50 glass-panel lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:border-r w-full border-neutral-200/50 border-b pt-8 pr-8 pb-8 pl-8 justify-between">
+            <div>
+                <div class="mb-12 animate-clip-in" style="animation-delay: 0.1s;">
+                    <a href="#" class="block text-3xl tracking-tighter font-medium group">
+                        nova<span class="text-neutral-400 group-hover:text-brand-indigo transition-colors">.studio</span>
+                    </a>
+                </div>
+
+                <nav class="space-y-4 animate-clip-in" style="animation-delay: 0.2s;">
+                    <a href="#" class="block text-lg text-neutral-900 font-medium hover:translate-x-1 transition-transform">Home</a>
+                    <a href="#work" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Work</a>
+                    <a href="#services" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Services</a>
+                    <a href="#pricing" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Pricing</a>
+                    <a href="#testimonials" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Testimonials</a>
+                </nav>
+            </div>
+
+            <div class="hidden lg:block space-y-2 animate-clip-in" style="animation-delay: 0.3s;">
+                <div class="flex items-center gap-2 mb-4">
+                    <img src="https://ui-avatars.com/api/?name=Nova+Studio&amp;background=8b5cf6&amp;color=fff" alt="User" class="w-8 h-8 rounded-full opacity-80">
+                    <div class="text-sm leading-tight">
+                        <p class="font-medium text-neutral-900">nova.studio</p>
+                        <p class="text-neutral-500">@novastudio</p>
+                    </div>
+                </div>
+                <p class="text-xs text-neutral-400">Reimagined by Nova Studio. Template designed by François Savard.</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-64 lg:p-16 flex flex-col gap-20 lg:gap-12 overflow-hidden pt-6 pr-6 pb-6 pl-6 gap-x-20 gap-y-20">
+
+            <!-- Hero Section -->
+            <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-10 gap-x-12 gap-y-12">
+                <div class="animate-clip-in lg:col-span-7 pb-4 space-y-8" style="animation-delay: 0.4s">
+                    <h1 class="leading-[0.95] lg:text-7xl xl:text-7xl text-5xl font-medium text-neutral-900 tracking-tight">Shaping the future of digital products, one pixel at a time.</h1>
+                    <p class="leading-snug lg:text-base text-xl font-normal text-neutral-500">
+                        We partner with founders to transform bold concepts into highly functional, beautifully crafted digital products. One dedicated team. Complete alignment.
+                    </p>
+                    <a href="#pricing" class="inline-block glass-button cursor-pointer outline-none focus:outline-none z-30 pointer-events-auto text-base rounded-full mt-1 mb-1 relative">
+                        <span class="button-text relative block select-none font-medium text-base text-neutral-800 tracking-tight px-8 py-4" style="font-size: 18px;">
+                            Collaborate with us
+                        </span>
+                        <!-- Shine Effect -->
+                        <div class="button-shine"></div>
+                    </a>
+                    
+                    <style>
+                        @property --angle-1 {
+                            syntax: "<angle>";
+                            inherits: false;
+                            initial-value: -75deg;
+                        }
+
+                        @property --angle-2 {
+                            syntax: "<angle>";
+                            inherits: false;
+                            initial-value: -45deg;
+                        }
+
+                        .glass-button {
+                            background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+                            box-shadow:
+                                inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+                                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+                                0 0.25em 0.125em -0.125em rgba(99, 102, 241, 0.15),
+                                0 0 0.1em 0.25em rgba(255, 255, 255, 0.2) inset,
+                                0 0 0 0 rgba(255, 255, 255, 1);
+                            backdrop-filter: blur(8px);
+                            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+                        }
+
+                        .glass-button:hover {
+                            transform: scale(0.975);
+                            backdrop-filter: blur(4px);
+                            box-shadow:
+                                inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+                                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+                                0 0.15em 0.05em -0.1em rgba(99, 102, 241, 0.2),
+                                0 0 0.05em 0.1em rgba(255, 255, 255, 0.5) inset,
+                                0 0 0 0 rgba(255, 255, 255, 1);
+                        }
+
+                        .glass-button:active {
+                            transform: scale(0.95) rotate3d(1, 0, 0, 15deg);
+                        }
+
+                        .button-text {
+                            text-shadow: 0em 0.25em 0.05em rgba(0, 0, 0, 0.05);
+                            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+                        }
+
+                        .glass-button::after {
+                            content: '';
+                            position: absolute;
+                            inset: 0;
+                            border-radius: 999px;
+                            width: calc(100% + 2px);
+                            height: calc(100% + 2px);
+                            top: -1px;
+                            left: -1px;
+                            padding: 1px;
+                            box-sizing: border-box;
+                            background:
+                                conic-gradient(from var(--angle-1) at 50% 50%, rgba(99, 102, 241, 0.3), rgba(0, 0, 0, 0) 5% 40%, rgba(139, 92, 246, 0.3) 50%, rgba(0, 0, 0, 0) 60% 95%, rgba(99, 102, 241, 0.3)),
+                                linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+                            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+                            mask-composite: exclude;
+                            transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease;
+                            box-shadow: inset 0 0 0.5px rgba(255, 255, 255, 0.5);
+                        }
+
+                        .glass-button:hover::after {
+                            --angle-1: -125deg;
+                        }
+
+                        .glass-button:active::after {
+                            --angle-1: -75deg;
+                        }
+
+                        .button-shine {
+                            position: absolute;
+                            inset: 0;
+                            border-radius: 999px;
+                            width: calc(100% - 1px);
+                            height: calc(100% - 1px);
+                            top: 0.5px;
+                            left: 0.5px;
+                            background: linear-gradient(var(--angle-2), rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 40% 50%, rgba(255, 255, 255, 0) 55%);
+                            mix-blend-mode: screen;
+                            pointer-events: none;
+                            background-size: 200% 200%;
+                            background-position: 0% 50%;
+                            background-repeat: no-repeat;
+                            transition: background-position 500ms cubic-bezier(0.25, 1, 0.5, 1), --angle-2 500ms cubic-bezier(0.25, 1, 0.5, 1);
+                        }
+
+                        .glass-button:hover .button-shine {
+                            background-position: 25% 50%;
+                        }
+                    </style>
+
+                    <section class="animate-fade-up w-full my-6 space-y-4" style="animation-delay: 0.6s">
+                        <p class="text-base text-neutral-500">Trusted by founders at hyper-growth tech startups and design-forward organizations</p>
+
+                        <div class="overflow-hidden w-full relative gap-x-4 gap-y-4">
+                            <!-- Gradient masks for fade effect -->
+                            <div class="z-10 bg-gradient-to-r from-neutral-50 to-transparent w-24 h-full absolute top-0 left-0"></div>
+                            <div class="bg-gradient-to-l from-neutral-50 to-transparent w-24 h-full z-10 absolute top-0 right-0"></div>
+
+                            <div class="flex w-max animate-marquee hover:pause-animation">
+                                <!-- Logos Batch 1 -->
+                                <div class="flex pr-4 pl-4 items-center gap-x-6">
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                </div>
+
+                                <!-- Logos Batch 2 (Duplicate for infinite marquee effect) -->
+                                <div class="flex pr-4 pl-4 items-center gap-x-6">
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="lg:col-span-5 flex flex-col animate-clip-in bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 justify-between" style="animation-delay: 0.5s; height:fit-content">
+                    <div class="aspect-[16/9] overflow-hidden w-full border border-neutral-200 rounded-2xl relative" style="padding:176.75% 0 0 0;">
+                        <!-- Clean Abstract Looping Gradient Video -->
+                        <iframe src="https://player.vimeo.com/video/769798715?autoplay=1&amp;muted=1&amp;loop=1&amp;controls=0&amp;transparent=0&amp;title=0&amp;byline=0&amp;portrait=0&amp;background=1" class="absolute inset-0 h-full w-full border-0 rounded-2xl" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" title="Abstract Design Loop"></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Work: 3D Carousel -->
+            <section id="work" class="animate-fade-up w-full pt-12 pb-12 relative" style="animation-delay: 0.8s">
+                <div class="flex mb-12 pr-2 pl-2 items-end justify-between">
+                    <h2 class="lg:text-5xl text-4xl font-medium text-neutral-900 tracking-tight">Featured Work</h2>
+                    <div class="flex gap-4">
+                        <button onclick="rotateCarousel(-1)" class="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-white hover:border-neutral-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4m0 0l6-6m-6 6l6 6"></path></svg>
+                        </button>
+                        <button onclick="rotateCarousel(1)" class="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-white hover:border-neutral-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16m0 0l-6-6m6 6l-6 6"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="carousel-container flex w-full h-[500px] relative items-center justify-center">
+                    <!-- Card 1 -->
+                    <div class="carousel-card active lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-0" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                            <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
+                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">Apex Invest - Wealth Management Portal</span>
+                            </div>
+                            <div class="flex bg-gradient-to-br from-neutral-100 to-neutral-200 w-full h-full items-center justify-center">
+                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/apex_invest.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="carousel-card next lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-1" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                            <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
+                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">PulseFit - AI Health Tracker App</span>
+                            </div>
+                            <div class="flex bg-gradient-to-bl from-blue-50 to-neutral-100 w-full h-full items-center justify-center">
+                                <div class="w-[40%] h-[80%] bg-center bg-[url(./assets/pulsefit_app.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="carousel-card prev lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-2" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                            <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
+                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">Clarity - Team Collaboration Suite</span>
+                            </div>
+                            <div class="flex bg-gradient-to-tr from-orange-50 to-neutral-100 w-full h-full items-center justify-center">
+                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/clarity_saas.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metrics Grid -->
+            <section class="animate-fade-up w-full pt-12 pb-12" style="animation-delay: 0.1s">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 gap-4">
+                    <!-- Metric 1 -->
+                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                        <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">8+ Years</h3>
+                        <p class="text-[15px] leading-relaxed text-neutral-500">Partnering inside high-growth tech startups, mapping scaling needs.</p>
+                    </div>
+                    <!-- Metric 2 -->
+                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                        <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">150+ Shipped</h3>
+                        <p class="text-[15px] leading-relaxed text-neutral-500">Premium SaaS dashboards, mobile apps, and interactive marketing sites.</p>
+                    </div>
+                    <!-- Metric 3 -->
+                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                        <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">$250M+ Raised</h3>
+                        <p class="text-[15px] leading-relaxed text-neutral-500">Total institutional funding secured by our startup clients post-redesign.</p>
+                    </div>
+                    <!-- Metric 4 -->
+                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                        <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">95% Retention</h3>
+                        <p class="text-[15px] leading-relaxed text-neutral-500">Startups continue collaborating after their initial release cycles.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How We Work Section -->
+            <section class="animate-scaleIn sm:p-2 bg-neutral-100/40 w-full max-w-none z-10 border-neutral-200 border rounded-3xl p-6 relative shadow-2xl">
+                <!-- Header -->
+                <div class="flex sm:p-6 p-1 gap-6 items-center">
+                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-neutral-900 tracking-tighter">How we work</h2>
+                    <span aria-hidden="true" role="separator" aria-orientation="vertical" class="w-px bg-neutral-200 h-10"></span>
+                    <p class="sm:text-base text-sm text-neutral-600 tracking-tight mt-1">A streamlined three-step workflow from strategy to ship.</p>
+                </div>
+
+                <div class="grid grid-cols-1 z-10 mt-6 relative items-stretch gap-y-4 lg:grid-cols-12 sm:gap-4 sm:mt-8">
+                    <!-- STEP 1 -->
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 1</span>
+                        <!-- Visual -->
+                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 border border-neutral-200 overflow-hidden">
+                            <div class="absolute inset-0 p-4 sm:p-6">
+                                <div class="bg-white/90 border border-neutral-200 rounded-xl p-4 w-full shadow-2xl">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-indigo">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14,2 14,8 20,8"></polyline>
+                                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        </svg>
+                                        <div class="h-2 w-24 bg-neutral-900 rounded"></div>
+                                    </div>
+                                    <div class="h-2 w-full bg-neutral-100 rounded mb-2"></div>
+                                    <div class="h-2 w-4/5 bg-neutral-100 rounded mb-2"></div>
+                                    <div class="h-2 w-3/4 bg-neutral-100 rounded mb-3"></div>
+                                    <div class="flex gap-2">
+                                        <div class="h-6 w-16 bg-brand-indigo/10 rounded-lg flex items-center justify-center">
+                                            <div class="h-1 w-8 bg-brand-indigo rounded"></div>
+                                        </div>
+                                        <div class="h-6 w-20 bg-neutral-100 rounded-lg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Copy -->
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Strategy & Mapping</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We align on your product roadmap, define core user flows, and establish the visual system.</p>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 2</span>
+                        <!-- Visual -->
+                        <div class="relative h-48 sm:h-56 rounded-2xl border border-neutral-200 overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 p-4">
+                            <div class="grid grid-cols-2 gap-3 h-full">
+                                <div class="bg-white border border-neutral-200 rounded-lg p-3 shadow-sm">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                        <div class="h-1.5 w-12 bg-brand-indigo rounded"></div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="h-1 w-full bg-neutral-200 rounded"></div>
+                                        <div class="h-1 w-4/5 bg-neutral-200 rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="bg-white border border-neutral-200 rounded-lg p-3 shadow-sm">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-violet">
+                                            <rect width="20" height="14" x="2" y="3" rx="2" ry="2"></rect>
+                                        </svg>
+                                        <div class="h-1.5 w-10 bg-brand-violet rounded"></div>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="h-1 w-full bg-neutral-200 rounded"></div>
+                                        <div class="h-1 w-5/6 bg-neutral-200 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Copy -->
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Figma & High-Fidelity</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We design interactive, high-fidelity layouts, revising in real-time with weekly feedback syncs.</p>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 3</span>
+                        <!-- Visual -->
+                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 border border-neutral-200 overflow-hidden p-4">
+                            <div class="w-full h-full rounded-xl overflow-hidden bg-white border border-neutral-200 p-3">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 bg-brand-indigo/10 rounded-lg flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo">
+                                                <path d="M3 3v5h5"></path>
+                                                <path d="M21 12A9 9 0 0 0 6 2.3L3 8"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="h-2 w-16 bg-neutral-900 rounded"></div>
+                                    </div>
+                                    <div class="w-4 h-4 bg-brand-indigo rounded-full"></div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 mb-3">
+                                    <div class="bg-blue-50 border border-blue-200 rounded p-2 text-center">
+                                        <div class="h-1 w-8 bg-blue-600 rounded mx-auto"></div>
+                                    </div>
+                                    <div class="bg-indigo-50 border border-indigo-200 rounded p-2 text-center">
+                                        <div class="h-1 w-6 bg-indigo-600 rounded mx-auto"></div>
+                                    </div>
+                                    <div class="bg-purple-50 border border-purple-200 rounded p-2 text-center">
+                                        <div class="h-1 w-10 bg-purple-600 rounded mx-auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Copy -->
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Clean Build & Launch</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We build with semantic code, Webflow, or Framer, delivering a performant and responsive site.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Case Study Cover Section -->
+            <div class="flex flex-col z-10 w-full mt-20 mr-auto mb-20 ml-auto relative">
+                <!-- Main CTA Card -->
+                <div class="overflow-hidden min-h-[500px] lg:min-h-[600px] shadow-neutral-900/30 bg-neutral-900 rounded-[2rem] relative shadow-2xl">
+                    <!-- Grid Pattern Overlay -->
+                    <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+                    <!-- Content Container -->
+                    <div class="grid grid-cols-1 min-h-[500px] h-full relative lg:grid-cols-1 lg:min-h-[600px]">
+                        <!-- Left: Text Content -->
+                        <div class="flex flex-col md:p-12 lg:p-16 bg-center bg-[url(./assets/case_study_cover.png)] bg-cover pt-8 pr-8 pb-8 pl-8 justify-center h-full">
+                            <p class="leading-relaxed text-base font-semibold text-brand-indigo mb-2">Case Study — Lumina SaaS</p>
+                            <h2 class="leading-tight md:text-4xl lg:text-5xl text-2xl font-normal text-white tracking-tight mb-8 max-w-4xl">
+                                Re-architected the workspaces UX and product positioning for a remote collaboration suite. 
+                                Result: 45% increase in user activation, 3x faster task management, and successful Series A funding.
+                            </h2>
+
+                            <a href="#pricing" class="group flex items-center gap-3 bg-white hover:bg-neutral-100 transition-all text-neutral-900 text-sm font-medium rounded-full px-6 py-3.5 w-fit shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                                <span>Collaborate with us</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                            </a>
+
+                            <!-- Trusted By -->
+                            <div class="mt-12 pt-8 border-t border-white/10">
+                                <p class="text-xs text-white/50 uppercase tracking-widest mb-4 font-medium">Delivering impact alongside teams at</p>
+                                <div class="flex flex-wrap items-center gap-8 opacity-60">
+                                    <iconify-icon icon="simple-icons:figma" class="text-white text-3xl"></iconify-icon>
+                                    <iconify-icon icon="simple-icons:linear" class="text-white text-3xl"></iconify-icon>
+                                    <iconify-icon icon="simple-icons:stripe" class="text-white text-3xl"></iconify-icon>
+                                    <iconify-icon icon="simple-icons:vercel" class="text-white text-3xl"></iconify-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Why Nova Studio Section -->
+            <section class="animate-fade-up w-full" style="animation-delay: 0.3s">
+                <div class="grid lg:grid-cols-12 lg:gap-8">
+                    <!-- Text Column -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Why founders partner with Nova Studio</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">
+                            We think like operators, not just designers. We bridge the gap between creative visual systems and core product analytics to ship meaningful user experiences.
+                        </p>
+                    </div>
+
+                    <!-- Grid Column -->
+                    <div class="lg:col-span-8">
+                        <div class="grid sm:grid-cols-2 bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 gap-4">
+                            <!-- Card 1 -->
+                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
+                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 3v18h18"></path>
+                                        <path d="m19 9-5 5-4-4-3 3"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Founder-first alignment</h3>
+                                    <p class="text-[15px] leading-relaxed text-neutral-500">We prioritize conversion, user engagement, and product metrics. We design to solve business problems, not win creative trophies.</p>
+                                </div>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
+                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Embedded collaboration</h3>
+                                    <p class="text-[15px] leading-relaxed text-neutral-500">Direct Slack integration, shared Figma canvases, and regular Loom recordings. We act as a natural extension of your engineering team.</p>
+                                </div>
+                            </div>
+
+                            <!-- Card 3 -->
+                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
+                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Predictable flat rate</h3>
+                                    <p class="text-[15px] leading-relaxed text-neutral-500">A single predictable retainer. No scoping documents, no hourly invoices, and no surprise billing. Cancel or pause anytime.</p>
+                                </div>
+                            </div>
+
+                            <!-- Card 4 -->
+                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
+                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5v2h4"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Speed and momentum</h3>
+                                    <p class="text-[15px] leading-relaxed text-neutral-500">We deliver high-fidelity outputs in days, not weeks. Continuous shipping keeps your engineering team moving without delay.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="animate-fade-up w-full my-24 pt-20 pb-0">
+                <div class="grid lg:grid-cols-12 lg:gap-8 gap-y-12">
+                    <!-- Left Text -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Our Expertise</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">We balance creative visual identity with structured UX/UI architectures to deliver modern software interfaces.</p>
+                    </div>
+
+                    <!-- Right Content: Service Cards -->
+                    <div class="lg:col-span-8">
+                        <div class="grid sm:grid-cols-3 gap-4">
+                            <!-- Card 1: Product Design -->
+                            <div class="space-y-2">
+                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                                        <path d="M3 9h18"></path>
+                                        <path d="M9 21V9"></path>
+                                    </svg>
+                                    <span class="text-base font-medium text-neutral-900">Product Design</span>
+                                </div>
+                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                        <li>Web Applications</li>
+                                        <li>Mobile App UX/UI</li>
+                                        <li>Design Systems</li>
+                                        <li>Prototyping & Ideation</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Web Design -->
+                            <div class="space-y-2">
+                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                        <path d="M2 8h20"></path>
+                                    </svg>
+                                    <span class="text-base font-medium text-neutral-900">Web Design</span>
+                                </div>
+                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                        <li>Landing Pages</li>
+                                        <li>Marketing Websites</li>
+                                        <li>Webflow & Framer</li>
+                                        <li>Micro-Animations</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Brand Identity -->
+                            <div class="space-y-2">
+                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+                                    </svg>
+                                    <span class="text-base font-medium text-neutral-900">Brand Systems</span>
+                                </div>
+                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                        <li>Brand Guidelines</li>
+                                        <li>Logo Design & Marks</li>
+                                        <li>Visual Identity</li>
+                                        <li>Pitch Deck Assets</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section id="pricing" class="animate-fade-up w-full pb-0 my-12">
+                <div class="grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-4 space-y-6">
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Simple Retainer Pricing</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">One flat monthly fee. Continuous design and development execution. Zero overhead.</p>
+                    </div>
+                    
+                    <div class="lg:col-span-8">
+                        <div class="flex flex-col gap-4 bg-neutral-100/40 border-neutral-200 border rounded-[32px] p-2">
+                            <!-- Top Pricing Card -->
+                            <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <h3 class="text-base font-semibold text-neutral-900 tracking-tight">Standard Retainer</h3>
+                                    <span class="bg-brand-indigo/10 text-brand-indigo px-3 py-1 rounded-full text-xs font-semibold border border-brand-indigo/20">Active Partnership</span>
+                                </div>
+                                <p class="text-[15px] text-neutral-500 mb-8">Perfect for early teams getting off the ground</p>
+                                <div class="text-3xl font-semibold text-neutral-900 tracking-tight mb-4">$5,500/month</div>
+
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-neutral-900 text-white font-medium px-6 py-3.5 rounded-full hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-[15px]">
+                                        Start Today
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    </a>
+                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-white text-neutral-900 border border-neutral-200 font-medium px-6 py-3.5 rounded-full hover:bg-neutral-50 transition-colors flex items-center justify-center gap-2 text-[15px]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                        Book a Call
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Features Card -->
+                            <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
+                                <ul class="space-y-4">
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
+                                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                                            <path d="M3 6h18"></path>
+                                        </svg>
+                                        <span>Priority delivery and fast response</span>
+                                    </li>
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
+                                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                        </svg>
+                                        <span>Full stack capabilities (Web, Mobile UX, Branding)</span>
+                                    </li>
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        </svg>
+                                        <span>Pause or cancel anytime</span>
+                                    </li>
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                        <span>Slack communication & regular check-ins</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Bottom Grid -->
+                            <div class="grid sm:grid-cols-2 gap-2">
+                                <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
+                                    <div class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="6" y="4" width="4" height="16"></rect>
+                                            <rect x="14" y="4" width="4" height="16"></rect>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-base font-medium text-neutral-900 mb-2">Pause anytime</h4>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500">Put your retainer on hold whenever you want, for up to 30 days, saving any unused days.</p>
+                                </div>
+                                <div class="bg-white border border-neutral-200/60 rounded-3xl p-6">
+                                    <div class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="m9 16 2 2 4-4"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-base font-medium text-neutral-900 mb-2">Zero-risk start</h4>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500">If you're not fully satisfied with our collaboration in the first week, we refund 75% immediately.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="animate-scaleIn bg-[#ffffff] w-full max-w-7xl z-10 border-neutral-200/70 border rounded-3xl p-8 relative shadow-2xl">
+                <!-- Header -->
+                <div class="flex flex-col pr-0 pl-0 gap-y-2">
+                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-[#000000] tracking-tighter text-left">Testimonials.</h2>
+                    <p class="sm:text-base text-sm text-zinc-400 tracking-tight mt-1">Real stories, real success. Our customers have experienced firsthand the impact of our solutions.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 sm:mt-8 mt-6 items-center">
+                    <div class="lg:col-span-12 relative">
+                        <div class="relative overflow-hidden h-[420px] rounded-3xl mt-6">
+                            <!-- Edge fades -->
+                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
+                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+
+                            <!-- Testimonials Rail -->
+                            <div class="flex gap-6 overflow-x-auto scroll-smooth pr-6 pl-6 absolute top-0 right-0 bottom-0 left-0 items-center" style="scrollbar-width: none; -ms-overflow-style: none;" id="testimonial-rail">
+                                <!-- Card 1 -->
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-2 shadow-2xl">
+                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                        "Nova Studio completely transformed our application UI. Our users immediately noticed the improved clarity, and our onboarding completion rate increased by 40%."
+                                    </p>
+                                    <div class="mt-8 flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Liam Vance" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="text-sm font-semibold">Liam Vance</div>
+                                            <div class="text-xs text-neutral-500">Co-founder, Clarity SaaS</div>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <!-- Card 2 -->
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center rotate-1 shadow-2xl">
+                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                        "The speed of execution is incredible. Nova Studio designed our entire mobile experience in under three weeks, working hand-in-hand with our engineers."
+                                    </p>
+                                    <div class="mt-8 flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Aria Sterling" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="text-sm font-semibold">Aria Sterling</div>
+                                            <div class="text-xs text-neutral-500">CEO, PulseFit</div>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <!-- Card 3 -->
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-1 shadow-2xl">
+                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                        "Having a top-tier design partner on a flat monthly retainer has eliminated all the friction from our shipping cycle. They are highly responsive and strategic."
+                                    </p>
+                                    <div class="mt-8 flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Devon Kincaid" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="text-sm font-semibold">Devon Kincaid</div>
+                                            <div class="text-xs text-neutral-500">Product VP, Apex Invest</div>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <!-- Card 4 -->
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center rotate-2 shadow-2xl">
+                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                        "Our website conversion rate surged by 65% after launching our new marketing pages. Nova Studio's design and Webflow execution was absolutely flawless."
+                                    </p>
+                                    <div class="mt-8 flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Maya Lin" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="text-sm font-semibold">Maya Lin</div>
+                                            <div class="text-xs text-neutral-500">Head of Growth, Lumina</div>
+                                        </div>
+                                    </div>
+                                </article>
+
+                                <!-- Card 5 -->
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-3 shadow-2xl">
+                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                        "Outstanding collaboration. Daily updates, clear Figma links, and proactive suggestions. They feel like true co-founders rather than an external agency."
+                                    </p>
+                                    <div class="mt-8 flex items-center gap-3">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Ethan Cross" class="w-10 h-10 rounded-xl object-cover">
+                                        <div>
+                                            <div class="text-sm font-semibold">Ethan Cross</div>
+                                            <div class="text-xs text-neutral-500">Founder, SyncTask</div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="absolute bottom-6 right-6 z-20 flex items-center gap-3">
+                                <button aria-label="Previous" class="hover:bg-neutral-200 transition-colors inline-flex text-neutral-900 bg-neutral-100 w-10 h-10 border-neutral-200 border rounded-full items-center justify-center" id="testimonial-prev" style="opacity: 0.5; pointer-events: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+                                </button>
+                                <button aria-label="Next" class="w-10 h-10 rounded-full text-white bg-neutral-900 hover:bg-neutral-800 transition-colors inline-flex items-center justify-center" id="testimonial-next" style="opacity: 1; pointer-events: auto;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="animate-fade-up lg:pr-8 lg:pt-0 w-full mb-24 gap-x-20 gap-y-20">
+                <div class="grid lg:grid-cols-12 lg:gap-8">
+                    <div class="lg:col-span-4 space-y-6">
+                        <h2 class="text-3xl lg:text-4xl font-medium tracking-tight text-neutral-900">Frequently Asked Questions</h2>
+                        <p class="text-[17px] text-neutral-500 leading-relaxed font-normal">
+                            Everything you need to know about our retainer and billing process. Can't find the answer you're looking for? Reach out to us directly at <a href="mailto:hello@nova.studio" class="underline underline-offset-4 text-neutral-900 hover:text-neutral-600 transition-colors font-medium">hello@nova.studio</a>.
+                        </p>
+                    </div>
+                    <div class="lg:col-span-8">
+                        <div class="bg-neutral-100/40 border border-neutral-200 rounded-3xl p-2 gap-2 flex flex-col">
+                            <!-- FAQ Item 1 -->
+                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-medium text-neutral-900">How does the "pause" feature work?</h3>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                    If you have a slow week or don't have enough requests to fill a full month, you can pause your subscription. Our billing cycles are based on a 31-day period, meaning any unused days are saved and can be reactivated whenever you need.
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 2 -->
+                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-medium text-neutral-900">What is the typical turnaround time?</h3>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                    Most design requests (landing page sections, app screen updates, UI component designs) are delivered in under 48 hours. More complex features or design system rebuilds are broken down into logical daily milestones.
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 3 -->
+                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-medium text-neutral-900">Do you offer development services?</h3>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                    Yes! We offer high-fidelity Webflow and Framer development as part of our package. Custom coding (React/Tailwind) is available upon request.
+                                </div>
+                            </div>
+
+                            <!-- FAQ Item 4 -->
+                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-base font-medium text-neutral-900">How do we communicate?</h3>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
+                                        <path d="m6 9 6 6 6-6"></path>
+                                    </svg>
+                                </div>
+                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                    We set up a private Slack channel for day-to-day asynchronous updates and use a shared Notion board to organize design tickets. We also offer optional weekly sync calls.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="pt-0 pb-0">
+                <div class="container lg:pl-0 lg:pr-0 mx-auto pr-0 pl-0">
+                    <div class="lg:px-10 lg:py-12 bg-white border-neutral-200 border rounded-3xl pt-10 pr-6 pb-10 pl-6 shadow-2xl">
+                        <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
+                            <!-- Brand -->
+                            <div class="lg:w-1/3 space-y-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-neutral-900 flex items-center justify-center text-white">
+                                        <iconify-icon icon="solar:cpu-bolt-bold-duotone" class="text-xl text-brand-violet"></iconify-icon>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-semibold text-neutral-900 tracking-tight">nova.studio</span>
+                                        <span class="text-[11px] uppercase text-neutral-400 tracking-[0.16em]">Start with premium design</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-neutral-500 max-w-sm">We partner with high-growth startups to design and build digital products that captivate and convert.</p>
+                                <div class="flex items-center gap-3 text-neutral-500">
+                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 transition-colors">
+                                        <iconify-icon icon="simple-icons:x"></iconify-icon>
+                                    </a>
+                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 transition-colors">
+                                        <iconify-icon icon="simple-icons:linkedin"></iconify-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Links -->
+                            <div class="flex-1 grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+                                <div class="space-y-3">
+                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 tracking-[0.16em]">Services</h3>
+                                    <ul class="space-y-2 text-neutral-600">
+                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Product Design</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Web Design</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Brand Identity</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Development</a></li>
+                                    </ul>
+                                </div>
+                                <div class="space-y-3">
+                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 tracking-[0.16em]">Case Studies</h3>
+                                    <ul class="space-y-2 text-neutral-600">
+                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Apex Invest</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">PulseFit Tracker</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Clarity Workspace</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Lumina SaaS Redesign</a></li>
+                                    </ul>
+                                </div>
+                                <div class="space-y-3">
+                                    <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Company</h3>
+                                    <ul class="space-y-2 text-neutral-600">
+                                        <li><a href="#" class="hover:text-neutral-900 transition-colors">Studio</a></li>
+                                        <li><a href="#" class="hover:text-neutral-900 transition-colors">Careers</a></li>
+                                        <li><a href="mailto:hello@nova.studio" class="hover:text-neutral-900 transition-colors">Contact</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Logos + Bottom row -->
+                        <div class="mt-10 border-t border-neutral-100 pt-6 flex flex-col gap-4">
+                            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs text-neutral-400">
+                                <p>© 2026 nova.studio. All rights reserved.</p>
+                                <div class="flex flex-wrap gap-4">
+                                    <a href="#" class="hover:text-neutral-700 transition-colors">Privacy Policy</a>
+                                    <a href="#" class="hover:text-neutral-700 transition-colors">Terms of Service</a>
+                                    <a href="#" class="hover:text-neutral-700 transition-colors">Cookie Settings</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        // Spotlight Effect Logic
+        function handleSpotlight(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+            e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+        }
+
+        // Carousel Logic
+        let currentIndex = 0;
+        const cards = [
+            document.getElementById('card-0'),
+            document.getElementById('card-1'),
+            document.getElementById('card-2')
+        ];
+
+        function rotateCarousel(direction) {
+            // Remove current classes
+            cards.forEach(card => {
+                card.classList.remove('active', 'prev', 'next');
+                card.style.zIndex = '';
+            });
+
+            // Calculate new index
+            if (direction === 1) { // Next
+                currentIndex = (currentIndex + 1) % cards.length;
+            } else { // Prev
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            }
+
+            // Assign new classes based on new index
+            const activeIndex = currentIndex;
+            const nextIndex = (currentIndex + 1) % cards.length;
+            const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+
+            cards[activeIndex].classList.add('active');
+            cards[nextIndex].classList.add('next');
+            cards[prevIndex].classList.add('prev');
+        }
+
+        // Auto rotate every 5 seconds
+        setInterval(() => {
+            rotateCarousel(1);
+        }, 5000);
+
+        // Case Study Carousel Logic (Null-Checked Safe Implementation)
+        let currentSlide = 0;
+        const slider = document.getElementById('case-study-slider');
+        const totalSlides = 2; 
+
+        function moveSlide(direction) {
+            if (!slider) return;
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            const offset = currentSlide * 100;
+            slider.style.transform = `translateX(-${offset}%)`;
+        }
+
+        // Auto rotate case studies every 6 seconds if element is present
+        if (slider) {
+            setInterval(() => {
+                moveSlide(1);
+            }, 6000);
+        }
+
+        // Testimonial Rail Navigation Controls
+        (function() {
+            const rail = document.getElementById('testimonial-rail');
+            const prevButton = document.getElementById('testimonial-prev');
+            const nextButton = document.getElementById('testimonial-next');
+            
+            if (rail && prevButton && nextButton) {
+                const scrollDistance = 540; // Card width + gap
+                
+                prevButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    rail.scrollBy({
+                        left: -scrollDistance,
+                        behavior: 'smooth'
+                    });
+                });
+                
+                nextButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    rail.scrollBy({
+                        left: scrollDistance,
+                        behavior: 'smooth'
+                    });
+                });
+                
+                function updateButtonStates() {
+                    const scrollLeft = rail.scrollLeft;
+                    const maxScroll = rail.scrollWidth - rail.clientWidth;
+                    
+                    if (scrollLeft <= 10) {
+                        prevButton.style.opacity = '0.5';
+                        prevButton.style.pointerEvents = 'none';
+                    } else {
+                        prevButton.style.opacity = '1';
+                        prevButton.style.pointerEvents = 'auto';
+                    }
+                    
+                    if (scrollLeft >= maxScroll - 10) {
+                        nextButton.style.opacity = '0.5';
+                        nextButton.style.pointerEvents = 'none';
+                    } else {
+                        nextButton.style.opacity = '1';
+                        nextButton.style.pointerEvents = 'auto';
+                    }
+                }
+                
+                updateButtonStates();
+                rail.addEventListener('scroll', updateButtonStates);
+                window.addEventListener('resize', updateButtonStates);
+            }
+        })();
+    </script>
+</body>
+</html>
