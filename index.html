@@ -8,6 +8,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -62,6 +63,11 @@
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(226, 232, 240, 0.7);
+            transition: background 0.3s, border 0.3s;
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(51, 65, 85, 0.5);
         }
         .glass-card-hover {
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -127,48 +133,75 @@
             z-index: 10;
             filter: blur(2px);
         }
-        /* Vertical Lines Background */
+        /* Background Grid */
         .grid-lines {
             background-size: 20% 100%;
             background-image: linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+            transition: background 0.3s;
+        }
+        .dark .grid-lines {
+            background-image: linear-gradient(to right, rgba(51, 65, 85, 0.15) 1px, transparent 1px);
+        }
+        /* Vertical Glowing Pulses */
+        @keyframes pulse-down {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(105vh); }
+        }
+        .pulse-line-active {
+            animation: pulse-down 10s linear infinite;
         }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap">
 </head>
-<body class="min-h-screen overflow-x-hidden selection:bg-brand-indigo/20 selection:text-neutral-900 text-neutral-900 bg-neutral-50 relative font-sans">
+<body class="min-h-screen overflow-x-hidden selection:bg-brand-indigo/20 selection:text-neutral-900 text-neutral-900 dark:text-neutral-100 bg-neutral-50 dark:bg-neutral-950 relative font-sans transition-colors duration-300">
 
     <!-- Background Grid Lines -->
     <div class="fixed grid-lines w-full h-full top-0 right-0 bottom-0 left-0"></div>
 
+    <!-- Vertical Glowing Lines -->
+    <div class="fixed top-0 bottom-0 left-[20%] w-[1px] bg-neutral-200/30 dark:bg-neutral-800/30 pointer-events-none z-0 hidden md:block">
+        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-transparent via-brand-indigo to-transparent pulse-line-active"></div>
+    </div>
+    <div class="fixed top-0 bottom-0 left-[60%] w-[1px] bg-neutral-200/30 dark:bg-neutral-800/30 pointer-events-none z-0 hidden md:block">
+        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-transparent via-brand-violet to-transparent pulse-line-active" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Trailing Custom Cursor -->
+    <div id="custom-cursor" class="fixed top-0 left-0 w-8 h-8 rounded-full border border-brand-indigo pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-all duration-75 ease-out hidden lg:flex items-center justify-center text-[10px] font-bold text-white tracking-widest bg-brand-indigo/10"></div>
+
     <div class="relative z-10 flex flex-col lg:flex-row min-h-screen max-w-[1600px] mx-auto">
         
         <!-- Sidebar / Navigation -->
-        <aside class="lg:w-64 lg:fixed lg:h-screen flex flex-col z-50 glass-panel lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:border-r w-full border-neutral-200/50 border-b pt-8 pr-8 pb-8 pl-8 justify-between">
+        <aside class="lg:w-64 lg:fixed lg:h-screen flex flex-col z-50 glass-panel lg:bg-transparent lg:backdrop-blur-none lg:border-none lg:border-r w-full border-neutral-200/50 dark:border-neutral-800/50 border-b pt-8 pr-8 pb-8 pl-8 justify-between">
             <div>
-                <div class="mb-12 animate-clip-in" style="animation-delay: 0.1s;">
-                    <a href="#" class="block text-3xl tracking-tighter font-medium group">
+                <div class="mb-12 flex items-center justify-between animate-clip-in" style="animation-delay: 0.1s;">
+                    <a href="#" class="block text-3xl tracking-tighter font-medium group text-neutral-900 dark:text-white">
                         nova<span class="text-neutral-400 group-hover:text-brand-indigo transition-colors">.studio</span>
                     </a>
+                    <button id="theme-toggle" onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-800/50 flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-sm cursor-none">
+                        <iconify-icon icon="solar:sun-bold-duotone" class="text-xl text-yellow-500 hidden dark:block"></iconify-icon>
+                        <iconify-icon icon="solar:moon-bold-duotone" class="text-xl text-brand-indigo block dark:hidden"></iconify-icon>
+                    </button>
                 </div>
 
                 <nav class="space-y-4 animate-clip-in" style="animation-delay: 0.2s;">
-                    <a href="#" class="block text-lg text-neutral-900 font-medium hover:translate-x-1 transition-transform">Home</a>
-                    <a href="#work" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Work</a>
-                    <a href="#services" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Services</a>
-                    <a href="#pricing" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Pricing</a>
-                    <a href="#testimonials" class="block text-lg text-neutral-500 hover:text-neutral-900 hover:translate-x-1 transition-all">Testimonials</a>
+                    <a href="#" class="block text-lg text-neutral-900 dark:text-white font-medium hover:translate-x-1 transition-transform cursor-none">Home</a>
+                    <a href="#work" class="block text-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:translate-x-1 transition-all cursor-none">Work</a>
+                    <a href="#services" class="block text-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:translate-x-1 transition-all cursor-none">Services</a>
+                    <a href="#pricing" class="block text-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:translate-x-1 transition-all cursor-none">Pricing</a>
+                    <a href="#testimonials" class="block text-lg text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:translate-x-1 transition-all cursor-none">Testimonials</a>
                 </nav>
             </div>
 
             <div class="hidden lg:block space-y-2 animate-clip-in" style="animation-delay: 0.3s;">
                 <div class="flex items-center gap-2 mb-4">
                     <img src="https://ui-avatars.com/api/?name=Nova+Studio&amp;background=8b5cf6&amp;color=fff" alt="User" class="w-8 h-8 rounded-full opacity-80">
-                    <div class="text-sm leading-tight">
-                        <p class="font-medium text-neutral-900">nova.studio</p>
-                        <p class="text-neutral-500">@novastudio</p>
+                    <div class="text-sm leading-tight text-neutral-900 dark:text-white">
+                        <p class="font-medium">nova.studio</p>
+                        <p class="text-neutral-500 dark:text-neutral-400">@novastudio</p>
                     </div>
                 </div>
-                <p class="text-xs text-neutral-400">Reimagined by Nova Studio. Template designed by François Savard.</p>
+                <p class="text-xs text-neutral-400 dark:text-neutral-500">Reimagined by Nova Studio. Template designed by François Savard.</p>
             </div>
         </aside>
 
@@ -178,12 +211,12 @@
             <!-- Hero Section -->
             <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-10 gap-x-12 gap-y-12">
                 <div class="animate-clip-in lg:col-span-7 pb-4 space-y-8" style="animation-delay: 0.4s">
-                    <h1 class="leading-[0.95] lg:text-7xl xl:text-7xl text-5xl font-medium text-neutral-900 tracking-tight">Shaping the future of digital products, one pixel at a time.</h1>
-                    <p class="leading-snug lg:text-base text-xl font-normal text-neutral-500">
+                    <h1 class="leading-[0.95] lg:text-7xl xl:text-7xl text-5xl font-medium text-neutral-900 dark:text-white tracking-tight">Shaping the future of digital products, one pixel at a time.</h1>
+                    <p class="leading-snug lg:text-base text-xl font-normal text-neutral-500 dark:text-neutral-400">
                         We partner with founders to transform bold concepts into highly functional, beautifully crafted digital products. One dedicated team. Complete alignment.
                     </p>
-                    <a href="#pricing" class="inline-block glass-button cursor-pointer outline-none focus:outline-none z-30 pointer-events-auto text-base rounded-full mt-1 mb-1 relative">
-                        <span class="button-text relative block select-none font-medium text-base text-neutral-800 tracking-tight px-8 py-4" style="font-size: 18px;">
+                    <a href="#pricing" class="inline-block glass-button cursor-none outline-none focus:outline-none z-30 pointer-events-auto text-base rounded-full mt-1 mb-1 relative">
+                        <span class="button-text relative block select-none font-medium text-base text-neutral-800 dark:text-neutral-100 tracking-tight px-8 py-4" style="font-size: 18px;">
                             Collaborate with us
                         </span>
                         <!-- Shine Effect -->
@@ -191,18 +224,6 @@
                     </a>
                     
                     <style>
-                        @property --angle-1 {
-                            syntax: "<angle>";
-                            inherits: false;
-                            initial-value: -75deg;
-                        }
-
-                        @property --angle-2 {
-                            syntax: "<angle>";
-                            inherits: false;
-                            initial-value: -45deg;
-                        }
-
                         .glass-button {
                             background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
                             box-shadow:
@@ -215,15 +236,18 @@
                             transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
                         }
 
+                        .dark .glass-button {
+                            background: linear-gradient(-75deg, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.1));
+                            box-shadow:
+                                inset 0 0.125em 0.125em rgba(255, 255, 255, 0.05),
+                                inset 0 -0.125em 0.125em rgba(0, 0, 0, 0.5),
+                                0 0.25em 0.125em -0.125em rgba(99, 102, 241, 0.3),
+                                0 0 0.15em 0.25em rgba(99, 102, 241, 0.1) inset;
+                        }
+
                         .glass-button:hover {
                             transform: scale(0.975);
                             backdrop-filter: blur(4px);
-                            box-shadow:
-                                inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-                                inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-                                0 0.15em 0.05em -0.1em rgba(99, 102, 241, 0.2),
-                                0 0 0.05em 0.1em rgba(255, 255, 255, 0.5) inset,
-                                0 0 0 0 rgba(255, 255, 255, 1);
                         }
 
                         .glass-button:active {
@@ -290,51 +314,51 @@
 
                         <div class="overflow-hidden w-full relative gap-x-4 gap-y-4">
                             <!-- Gradient masks for fade effect -->
-                            <div class="z-10 bg-gradient-to-r from-neutral-50 to-transparent w-24 h-full absolute top-0 left-0"></div>
-                            <div class="bg-gradient-to-l from-neutral-50 to-transparent w-24 h-full z-10 absolute top-0 right-0"></div>
+                            <div class="z-10 bg-gradient-to-r from-neutral-50 dark:from-neutral-950 to-transparent w-24 h-full absolute top-0 left-0"></div>
+                            <div class="bg-gradient-to-l from-neutral-50 dark:from-neutral-950 to-transparent w-24 h-full z-10 absolute top-0 right-0"></div>
 
                             <div class="flex w-max animate-marquee hover:pause-animation">
                                 <!-- Logos Batch 1 -->
                                 <div class="flex pr-4 pl-4 items-center gap-x-6">
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
                                 </div>
 
                                 <!-- Logos Batch 2 (Duplicate for infinite marquee effect) -->
                                 <div class="flex pr-4 pl-4 items-center gap-x-6">
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:figma" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:linear" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:supabase" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:vercel" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:framer" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
-                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
-                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 text-4xl opacity-80"></iconify-icon>
+                                    <div class="glass-panel flex hover:grayscale-0 transition-all duration-500 spotlight-card bg-neutral-50 dark:bg-neutral-900 w-48 h-24 rounded-2xl grayscale items-center justify-center" onmousemove="handleSpotlight(event)">
+                                        <iconify-icon icon="simple-icons:raycast" class="text-neutral-900 dark:text-white text-4xl opacity-80"></iconify-icon>
                                     </div>
                                 </div>
                             </div>
@@ -342,8 +366,8 @@
                     </section>
                 </div>
 
-                <div class="lg:col-span-5 flex flex-col animate-clip-in bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 justify-between" style="animation-delay: 0.5s; height:fit-content">
-                    <div class="aspect-[16/9] overflow-hidden w-full border border-neutral-200 rounded-2xl relative" style="padding:176.75% 0 0 0;">
+                <div class="lg:col-span-5 flex flex-col animate-clip-in bg-neutral-100/40 dark:bg-neutral-900/20 border-neutral-200 dark:border-neutral-800 border rounded-3xl p-2 justify-between" style="animation-delay: 0.5s; height:fit-content">
+                    <div class="aspect-[16/9] overflow-hidden w-full border border-neutral-200 dark:border-neutral-800 rounded-2xl relative" style="padding:176.75% 0 0 0;">
                         <!-- Clean Abstract Looping Gradient Video -->
                         <iframe src="https://player.vimeo.com/video/769798715?autoplay=1&amp;muted=1&amp;loop=1&amp;controls=0&amp;transparent=0&amp;title=0&amp;byline=0&amp;portrait=0&amp;background=1" class="absolute inset-0 h-full w-full border-0 rounded-2xl" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" title="Abstract Design Loop"></iframe>
                     </div>
@@ -353,50 +377,50 @@
             <!-- Featured Work: 3D Carousel -->
             <section id="work" class="animate-fade-up w-full pt-12 pb-12 relative" style="animation-delay: 0.8s">
                 <div class="flex mb-12 pr-2 pl-2 items-end justify-between">
-                    <h2 class="lg:text-5xl text-4xl font-medium text-neutral-900 tracking-tight">Featured Work</h2>
+                    <h2 class="lg:text-5xl text-4xl font-medium text-neutral-900 dark:text-white tracking-tight">Featured Work</h2>
                     <div class="flex gap-4">
-                        <button onclick="rotateCarousel(-1)" class="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-white hover:border-neutral-400 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4m0 0l6-6m-6 6l6 6"></path></svg>
+                        <button onclick="rotateCarousel(-1)" class="w-12 h-12 rounded-full border border-neutral-300 dark:border-neutral-800 flex items-center justify-center hover:bg-white dark:hover:bg-neutral-900 hover:border-neutral-400 transition-colors cursor-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900 dark:text-white"><path d="M20 12H4m0 0l6-6m-6 6l6 6"></path></svg>
                         </button>
-                        <button onclick="rotateCarousel(1)" class="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-white hover:border-neutral-400 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16m0 0l-6-6m6 6l-6 6"></path></svg>
+                        <button onclick="rotateCarousel(1)" class="w-12 h-12 rounded-full border border-neutral-300 dark:border-neutral-800 flex items-center justify-center hover:bg-white dark:hover:bg-neutral-900 hover:border-neutral-400 transition-colors cursor-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900 dark:text-white"><path d="M4 12h16m0 0l-6-6m6 6l-6 6"></path></svg>
                         </button>
                     </div>
                 </div>
 
                 <div class="carousel-container flex w-full h-[500px] relative items-center justify-center">
                     <!-- Card 1 -->
-                    <div class="carousel-card active lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-0" onmousemove="handleSpotlight(event)">
-                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                    <div class="carousel-card active lg:w-3/4 glass-panel spotlight-card cursor-none w-full h-full rounded-3xl p-2" id="card-0" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 dark:bg-neutral-950 rounded-2xl overflow-hidden relative group">
                             <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
-                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">Apex Invest - Wealth Management Portal</span>
+                                <span class="bg-white/80 dark:bg-neutral-900/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5 dark:border-white/5 text-neutral-900 dark:text-white">Apex Invest - Wealth Management Portal</span>
                             </div>
-                            <div class="flex bg-gradient-to-br from-neutral-100 to-neutral-200 w-full h-full items-center justify-center">
-                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/apex_invest.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            <div class="flex bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-900 dark:to-neutral-800 w-full h-full items-center justify-center">
+                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/apex_invest.png)] bg-cover border border-neutral-200/50 dark:border-neutral-800/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="carousel-card next lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-1" onmousemove="handleSpotlight(event)">
-                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                    <div class="carousel-card next lg:w-3/4 glass-panel spotlight-card cursor-none w-full h-full rounded-3xl p-2" id="card-1" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 dark:bg-neutral-950 rounded-2xl overflow-hidden relative group">
                             <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
-                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">PulseFit - AI Health Tracker App</span>
+                                <span class="bg-white/80 dark:bg-neutral-900/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5 dark:border-white/5 text-neutral-900 dark:text-white">PulseFit - AI Health Tracker App</span>
                             </div>
-                            <div class="flex bg-gradient-to-bl from-blue-50 to-neutral-100 w-full h-full items-center justify-center">
-                                <div class="w-[40%] h-[80%] bg-center bg-[url(./assets/pulsefit_app.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            <div class="flex bg-gradient-to-bl from-blue-50 to-neutral-100 dark:from-slate-900 dark:to-neutral-800 w-full h-full items-center justify-center">
+                                <div class="w-[40%] h-[80%] bg-center bg-[url(./assets/pulsefit_app.png)] bg-cover border border-neutral-200/50 dark:border-neutral-800/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="carousel-card prev lg:w-3/4 glass-panel spotlight-card cursor-pointer w-full h-full rounded-3xl p-2" id="card-2" onmousemove="handleSpotlight(event)">
-                        <div class="w-full h-full bg-neutral-50 rounded-2xl overflow-hidden relative group">
+                    <div class="carousel-card prev lg:w-3/4 glass-panel spotlight-card cursor-none w-full h-full rounded-3xl p-2" id="card-2" onmousemove="handleSpotlight(event)">
+                        <div class="w-full h-full bg-neutral-50 dark:bg-neutral-950 rounded-2xl overflow-hidden relative group">
                             <div class="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
-                                <span class="bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5">Clarity - Team Collaboration Suite</span>
+                                <span class="bg-white/80 dark:bg-neutral-900/80 backdrop-blur px-3 py-1 rounded-full text-xs font-medium border border-black/5 dark:border-white/5 text-neutral-900 dark:text-white">Clarity - Team Collaboration Suite</span>
                             </div>
-                            <div class="flex bg-gradient-to-tr from-orange-50 to-neutral-100 w-full h-full items-center justify-center">
-                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/clarity_saas.png)] bg-cover border border-neutral-200/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
+                            <div class="flex bg-gradient-to-tr from-orange-50 to-neutral-100 dark:from-amber-950/20 dark:to-neutral-800 w-full h-full items-center justify-center">
+                                <div class="w-[80%] h-[70%] bg-center bg-[url(./assets/clarity_saas.png)] bg-cover border border-neutral-200/50 dark:border-neutral-800/50 rounded-xl shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]"></div>
                             </div>
                         </div>
                     </div>
@@ -405,80 +429,78 @@
 
             <!-- Metrics Grid -->
             <section class="animate-fade-up w-full pt-12 pb-12" style="animation-delay: 0.1s">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-neutral-100/40 dark:bg-neutral-900/20 border-neutral-200 dark:border-neutral-800 border rounded-3xl p-2 gap-4">
                     <!-- Metric 1 -->
-                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300">
                         <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">8+ Years</h3>
-                        <p class="text-[15px] leading-relaxed text-neutral-500">Partnering inside high-growth tech startups, mapping scaling needs.</p>
+                        <p class="text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">Partnering inside high-growth tech startups, mapping scaling needs.</p>
                     </div>
                     <!-- Metric 2 -->
-                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300">
                         <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">150+ Shipped</h3>
-                        <p class="text-[15px] leading-relaxed text-neutral-500">Premium SaaS dashboards, mobile apps, and interactive marketing sites.</p>
+                        <p class="text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">Premium SaaS dashboards, mobile apps, and interactive marketing sites.</p>
                     </div>
                     <!-- Metric 3 -->
-                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300">
                         <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">$250M+ Raised</h3>
-                        <p class="text-[15px] leading-relaxed text-neutral-500">Total institutional funding secured by our startup clients post-redesign.</p>
+                        <p class="text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">Total institutional funding secured by our startup clients post-redesign.</p>
                     </div>
                     <!-- Metric 4 -->
-                    <div class="bg-white p-6 rounded-2xl border border-neutral-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-shadow duration-300">
+                    <div class="bg-white dark:bg-neutral-900 p-6 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300">
                         <h3 class="text-2xl font-semibold text-brand-indigo tracking-tight mb-2">95% Retention</h3>
-                        <p class="text-[15px] leading-relaxed text-neutral-500">Startups continue collaborating after their initial release cycles.</p>
+                        <p class="text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">Startups continue collaborating after their initial release cycles.</p>
                     </div>
                 </div>
             </section>
 
             <!-- How We Work Section -->
-            <section class="animate-scaleIn sm:p-2 bg-neutral-100/40 w-full max-w-none z-10 border-neutral-200 border rounded-3xl p-6 relative shadow-2xl">
+            <section class="animate-scaleIn sm:p-2 bg-neutral-100/40 dark:bg-neutral-900/20 w-full max-w-none z-10 border-neutral-200 dark:border-neutral-800 border rounded-3xl p-6 relative shadow-2xl">
                 <!-- Header -->
                 <div class="flex sm:p-6 p-1 gap-6 items-center">
-                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-neutral-900 tracking-tighter">How we work</h2>
-                    <span aria-hidden="true" role="separator" aria-orientation="vertical" class="w-px bg-neutral-200 h-10"></span>
-                    <p class="sm:text-base text-sm text-neutral-600 tracking-tight mt-1">A streamlined three-step workflow from strategy to ship.</p>
+                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-neutral-900 dark:text-white tracking-tighter">How we work</h2>
+                    <span aria-hidden="true" role="separator" aria-orientation="vertical" class="w-px bg-neutral-200 dark:bg-neutral-800 h-10"></span>
+                    <p class="sm:text-base text-sm text-neutral-600 dark:text-neutral-400 tracking-tight mt-1 font-normal">A streamlined three-step workflow from strategy to ship.</p>
                 </div>
 
                 <div class="grid grid-cols-1 z-10 mt-6 relative items-stretch gap-y-4 lg:grid-cols-12 sm:gap-4 sm:mt-8">
                     <!-- STEP 1 -->
-                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
-                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 1</span>
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white dark:bg-neutral-900 h-full border-neutral-200 dark:border-neutral-800 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 1</span>
                         <!-- Visual -->
-                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 border border-neutral-200 overflow-hidden">
+                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 overflow-hidden">
                             <div class="absolute inset-0 p-4 sm:p-6">
-                                <div class="bg-white/90 border border-neutral-200 rounded-xl p-4 w-full shadow-2xl">
+                                <div class="bg-white/90 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 w-full shadow-2xl">
                                     <div class="flex items-center gap-2 mb-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-brand-indigo">
                                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                                             <polyline points="14,2 14,8 20,8"></polyline>
                                             <line x1="16" y1="13" x2="8" y2="13"></line>
-                                            <line x1="16" y1="17" x2="8" y2="17"></line>
                                         </svg>
-                                        <div class="h-2 w-24 bg-neutral-900 rounded"></div>
+                                        <div class="h-2 w-24 bg-neutral-900 dark:bg-neutral-100 rounded"></div>
                                     </div>
-                                    <div class="h-2 w-full bg-neutral-100 rounded mb-2"></div>
-                                    <div class="h-2 w-4/5 bg-neutral-100 rounded mb-2"></div>
-                                    <div class="h-2 w-3/4 bg-neutral-100 rounded mb-3"></div>
+                                    <div class="h-2 w-full bg-neutral-100 dark:bg-neutral-800 rounded mb-2"></div>
+                                    <div class="h-2 w-4/5 bg-neutral-100 dark:bg-neutral-800 rounded mb-2"></div>
+                                    <div class="h-2 w-3/4 bg-neutral-100 dark:bg-neutral-800 rounded mb-3"></div>
                                     <div class="flex gap-2">
                                         <div class="h-6 w-16 bg-brand-indigo/10 rounded-lg flex items-center justify-center">
                                             <div class="h-1 w-8 bg-brand-indigo rounded"></div>
                                         </div>
-                                        <div class="h-6 w-20 bg-neutral-100 rounded-lg"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Copy -->
-                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Strategy & Mapping</h3>
-                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We align on your product roadmap, define core user flows, and establish the visual system.</p>
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 dark:text-white tracking-tighter mt-6 font-medium">Strategy & Mapping</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 dark:text-neutral-400 tracking-tight max-w-[52ch] mt-2">We align on your product roadmap, define core user flows, and establish the visual system.</p>
                     </div>
 
                     <!-- STEP 2 -->
-                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
-                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 2</span>
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white dark:bg-neutral-900 h-full border-neutral-200 dark:border-neutral-800 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 2</span>
                         <!-- Visual -->
-                        <div class="relative h-48 sm:h-56 rounded-2xl border border-neutral-200 overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 p-4">
+                        <div class="relative h-48 sm:h-56 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-950 dark:to-neutral-900 p-4">
                             <div class="grid grid-cols-2 gap-3 h-full">
-                                <div class="bg-white border border-neutral-200 rounded-lg p-3 shadow-sm">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 shadow-sm">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo">
                                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -486,11 +508,11 @@
                                         <div class="h-1.5 w-12 bg-brand-indigo rounded"></div>
                                     </div>
                                     <div class="space-y-1">
-                                        <div class="h-1 w-full bg-neutral-200 rounded"></div>
-                                        <div class="h-1 w-4/5 bg-neutral-200 rounded"></div>
+                                        <div class="h-1 w-full bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                                        <div class="h-1 w-4/5 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
                                     </div>
                                 </div>
-                                <div class="bg-white border border-neutral-200 rounded-lg p-3 shadow-sm">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-3 shadow-sm">
                                     <div class="flex items-center gap-2 mb-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-violet">
                                             <rect width="20" height="14" x="2" y="3" rx="2" ry="2"></rect>
@@ -498,51 +520,51 @@
                                         <div class="h-1.5 w-10 bg-brand-violet rounded"></div>
                                     </div>
                                     <div class="space-y-1">
-                                        <div class="h-1 w-full bg-neutral-200 rounded"></div>
-                                        <div class="h-1 w-5/6 bg-neutral-200 rounded"></div>
+                                        <div class="h-1 w-full bg-neutral-200 dark:bg-neutral-700 rounded"></div>
+                                        <div class="h-1 w-5/6 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Copy -->
-                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Figma & High-Fidelity</h3>
-                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We design interactive, high-fidelity layouts, revising in real-time with weekly feedback syncs.</p>
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 dark:text-white tracking-tighter mt-6 font-medium">Figma & High-Fidelity</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 dark:text-neutral-400 tracking-tight max-w-[52ch] mt-2">We design interactive, high-fidelity layouts, revising in real-time with weekly feedback syncs.</p>
                     </div>
 
                     <!-- STEP 3 -->
-                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white h-full border-neutral-200 border rounded-2xl p-6 relative">
-                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 bg-white text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 3</span>
+                    <div class="lg:col-span-4 sm:p-8 flex flex-col bg-white dark:bg-neutral-900 h-full border-neutral-200 dark:border-neutral-800 border rounded-2xl p-6 relative">
+                        <span class="absolute -top-4 left-6 inline-flex items-center px-4 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 text-xs sm:text-sm text-brand-indigo font-medium tracking-tight">STEP 3</span>
                         <!-- Visual -->
-                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 border border-neutral-200 overflow-hidden p-4">
-                            <div class="w-full h-full rounded-xl overflow-hidden bg-white border border-neutral-200 p-3">
+                        <div class="relative h-48 sm:h-56 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 overflow-hidden p-4">
+                            <div class="w-full h-full rounded-xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-3">
                                 <div class="flex items-center justify-between mb-3">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 bg-brand-indigo/10 rounded-lg flex items-center justify-center">
+                                        <div class="w-6 h-6 bg-brand-indigo/10 dark:bg-brand-indigo/20 rounded-lg flex items-center justify-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo">
                                                 <path d="M3 3v5h5"></path>
                                                 <path d="M21 12A9 9 0 0 0 6 2.3L3 8"></path>
                                             </svg>
                                         </div>
-                                        <div class="h-2 w-16 bg-neutral-900 rounded"></div>
+                                        <div class="h-2 w-16 bg-neutral-900 dark:bg-neutral-100 rounded"></div>
                                     </div>
                                     <div class="w-4 h-4 bg-brand-indigo rounded-full"></div>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mb-3">
-                                    <div class="bg-blue-50 border border-blue-200 rounded p-2 text-center">
+                                    <div class="bg-blue-50 border border-blue-200 dark:border-blue-900/30 rounded p-2 text-center">
                                         <div class="h-1 w-8 bg-blue-600 rounded mx-auto"></div>
                                     </div>
-                                    <div class="bg-indigo-50 border border-indigo-200 rounded p-2 text-center">
+                                    <div class="bg-indigo-50 border border-indigo-200 dark:border-indigo-900/30 rounded p-2 text-center">
                                         <div class="h-1 w-6 bg-indigo-600 rounded mx-auto"></div>
                                     </div>
-                                    <div class="bg-purple-50 border border-purple-200 rounded p-2 text-center">
+                                    <div class="bg-purple-50 border border-purple-200 dark:border-purple-900/30 rounded p-2 text-center">
                                         <div class="h-1 w-10 bg-purple-600 rounded mx-auto"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Copy -->
-                        <h3 class="sm:text-4xl text-3xl text-neutral-900 tracking-tighter mt-6">Clean Build & Launch</h3>
-                        <p class="sm:text-base text-sm text-neutral-500 tracking-tight max-w-[52ch] mt-2">We build with semantic code, Webflow, or Framer, delivering a performant and responsive site.</p>
+                        <h3 class="sm:text-4xl text-3xl text-neutral-900 dark:text-white tracking-tighter mt-6 font-medium">Clean Build & Launch</h3>
+                        <p class="sm:text-base text-sm text-neutral-500 dark:text-neutral-400 tracking-tight max-w-[52ch] mt-2">We build with semantic code, Webflow, or Framer, delivering a performant and responsive site.</p>
                     </div>
                 </div>
             </section>
@@ -564,7 +586,7 @@
                                 Result: 45% increase in user activation, 3x faster task management, and successful Series A funding.
                             </h2>
 
-                            <a href="#pricing" class="group flex items-center gap-3 bg-white hover:bg-neutral-100 transition-all text-neutral-900 text-sm font-medium rounded-full px-6 py-3.5 w-fit shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                            <a href="#pricing" class="group flex items-center gap-3 bg-white hover:bg-neutral-100 transition-all text-neutral-900 text-sm font-medium rounded-full px-6 py-3.5 w-fit shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-none">
                                 <span>Collaborate with us</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                             </a>
@@ -584,72 +606,97 @@
                 </div>
             </div>
 
-            <!-- Why Nova Studio Section -->
+            <!-- Why Nova Studio Section (Modern Bento Grid Layout) -->
             <section class="animate-fade-up w-full" style="animation-delay: 0.3s">
-                <div class="grid lg:grid-cols-12 lg:gap-8">
+                <div class="grid lg:grid-cols-12 lg:gap-8 gap-y-8">
                     <!-- Text Column -->
                     <div class="lg:col-span-4 space-y-6">
-                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Why founders partner with Nova Studio</h2>
-                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 dark:text-white tracking-tight">Why founders partner with Nova Studio</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500 dark:text-neutral-400">
                             We think like operators, not just designers. We bridge the gap between creative visual systems and core product analytics to ship meaningful user experiences.
                         </p>
                     </div>
 
-                    <!-- Grid Column -->
+                    <!-- Grid Column (Bento Structure) -->
                     <div class="lg:col-span-8">
-                        <div class="grid sm:grid-cols-2 bg-neutral-100/40 border-neutral-200 border rounded-3xl p-2 gap-4">
-                            <!-- Card 1 -->
-                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
-                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 3v18h18"></path>
-                                        <path d="m19 9-5 5-4-4-3 3"></path>
-                                    </svg>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-neutral-100/40 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-2">
+                            <!-- Card 1: Operator Mindset (Large, spans 2 cols on lg) -->
+                            <div class="lg:col-span-2 bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 flex flex-col justify-between hover:border-brand-indigo/50 transition-colors duration-300">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="w-10 h-10 rounded-lg bg-brand-indigo/10 dark:bg-brand-indigo/20 flex items-center justify-center text-brand-indigo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 3v18h18"></path>
+                                            <path d="m19 9-5 5-4-4-3 3"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-brand-indigo tracking-wider uppercase">Strategic focus</span>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Founder-first alignment</h3>
-                                    <p class="text-[15px] leading-relaxed text-neutral-500">We prioritize conversion, user engagement, and product metrics. We design to solve business problems, not win creative trophies.</p>
+                                    <h3 class="text-xl font-medium text-neutral-900 dark:text-white mb-2">Founder-first product thinking</h3>
+                                    <p class="text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">We prioritize user engagement, customer conversion, and operational constraints over design awards. We build interfaces to solve actual business problems and maximize speed-to-market.</p>
                                 </div>
                             </div>
 
-                            <!-- Card 2 -->
-                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
-                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                    </svg>
+                            <!-- Card 2: Embedded Collaboration (Tall, spans 1 col, 2 rows on lg) -->
+                            <div class="lg:row-span-2 bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 flex flex-col justify-between hover:border-brand-indigo/50 transition-colors duration-300">
+                                <div class="space-y-6">
+                                    <div class="w-10 h-10 rounded-lg bg-brand-indigo/10 dark:bg-brand-indigo/20 flex items-center justify-center text-brand-indigo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-medium text-neutral-900 dark:text-white mb-2">Embedded collaboration</h3>
+                                        <p class="text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400">Direct Slack channels, shared Figma workspaces, and regular Loom walkthroughs keep us integrated into your sprint cycles.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Embedded collaboration</h3>
-                                    <p class="text-[15px] leading-relaxed text-neutral-500">Direct Slack integration, shared Figma canvases, and regular Loom recordings. We act as a natural extension of your engineering team.</p>
+                                
+                                <!-- Active Timezone / Team Clock Widget -->
+                                <div class="mt-8 pt-6 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="relative flex h-2 w-2">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        </span>
+                                        <span class="text-xs text-neutral-500 dark:text-neutral-400 font-medium">Team Online</span>
+                                    </div>
+                                    <span id="team-clock" class="text-xs font-semibold text-neutral-800 dark:text-neutral-200 font-mono">00:00:00 UTC</span>
                                 </div>
                             </div>
 
-                            <!-- Card 3 -->
-                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
-                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    </svg>
+                            <!-- Card 3: Predictable Flat Rate (Spans 1 col) -->
+                            <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 flex flex-col justify-between hover:border-brand-indigo/50 transition-colors duration-300">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="w-10 h-10 rounded-lg bg-brand-indigo/10 dark:bg-brand-indigo/20 flex items-center justify-center text-brand-indigo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="bg-brand-indigo/10 dark:bg-brand-indigo/20 border border-brand-indigo/20 text-brand-indigo text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
+                                        2 Slots Left
+                                    </div>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Predictable flat rate</h3>
-                                    <p class="text-[15px] leading-relaxed text-neutral-500">A single predictable retainer. No scoping documents, no hourly invoices, and no surprise billing. Cancel or pause anytime.</p>
+                                    <h3 class="text-xl font-medium text-neutral-900 dark:text-white mb-2">Flat monthly rate</h3>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400">One predictable retainer. No scoping revisions, no hourly logging, and no billing surprises.</p>
                                 </div>
                             </div>
 
-                            <!-- Card 4 -->
-                            <div class="bg-white p-8 rounded-2xl border border-neutral-200/60 flex flex-col gap-5 hover:border-neutral-300 transition-colors">
-                                <div class="w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center text-brand-indigo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5v2h4"></path>
-                                    </svg>
+                            <!-- Card 4: Speed & Momentum (Spans 1 col) -->
+                            <div class="bg-white dark:bg-neutral-900 p-8 rounded-2xl border border-neutral-200/60 dark:border-neutral-800/80 flex flex-col justify-between hover:border-brand-indigo/50 transition-colors duration-300">
+                                <div class="flex items-center justify-between mb-6">
+                                    <div class="w-10 h-10 rounded-lg bg-brand-indigo/10 dark:bg-brand-indigo/20 flex items-center justify-center text-brand-indigo">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5v2h4"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-semibold text-neutral-400 font-mono">48h ETA</span>
                                 </div>
                                 <div>
-                                    <h3 class="text-lg font-medium text-neutral-900 mb-2">Speed and momentum</h3>
-                                    <p class="text-[15px] leading-relaxed text-neutral-500">We deliver high-fidelity outputs in days, not weeks. Continuous shipping keeps your engineering team moving without delay.</p>
+                                    <h3 class="text-xl font-medium text-neutral-900 dark:text-white mb-2">Speed & momentum</h3>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400">Continuous execution allows us to deliver high-fidelity designs in days, keeping dev sprints unblocked.</p>
                                 </div>
                             </div>
                         </div>
@@ -662,8 +709,8 @@
                 <div class="grid lg:grid-cols-12 lg:gap-8 gap-y-12">
                     <!-- Left Text -->
                     <div class="lg:col-span-4 space-y-6">
-                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Our Expertise</h2>
-                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">We balance creative visual identity with structured UX/UI architectures to deliver modern software interfaces.</p>
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 dark:text-white">Our Expertise</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500 dark:text-neutral-400 font-normal">We balance creative visual identity with structured UX/UI architectures to deliver modern software interfaces.</p>
                     </div>
 
                     <!-- Right Content: Service Cards -->
@@ -671,16 +718,16 @@
                         <div class="grid sm:grid-cols-3 gap-4">
                             <!-- Card 1: Product Design -->
                             <div class="space-y-2">
-                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900 dark:text-white">
                                         <rect width="18" height="18" x="3" y="3" rx="2"></rect>
                                         <path d="M3 9h18"></path>
                                         <path d="M9 21V9"></path>
                                     </svg>
-                                    <span class="text-base font-medium text-neutral-900">Product Design</span>
+                                    <span class="text-base font-medium text-neutral-900 dark:text-white">Product Design</span>
                                 </div>
-                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
-                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500 dark:text-neutral-400">
                                         <li>Web Applications</li>
                                         <li>Mobile App UX/UI</li>
                                         <li>Design Systems</li>
@@ -691,15 +738,15 @@
 
                             <!-- Card 2: Web Design -->
                             <div class="space-y-2">
-                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900 dark:text-white">
                                         <rect width="20" height="16" x="2" y="4" rx="2"></rect>
                                         <path d="M2 8h20"></path>
                                     </svg>
-                                    <span class="text-base font-medium text-neutral-900">Web Design</span>
+                                    <span class="text-base font-medium text-neutral-900 dark:text-white">Web Design</span>
                                 </div>
-                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
-                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500 dark:text-neutral-400">
                                         <li>Landing Pages</li>
                                         <li>Marketing Websites</li>
                                         <li>Webflow & Framer</li>
@@ -710,14 +757,14 @@
 
                             <!-- Card 3: Brand Identity -->
                             <div class="space-y-2">
-                                <div class="bg-white border border-neutral-200/60 p-4 rounded-2xl flex items-center gap-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-4 rounded-2xl flex items-center gap-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-900 dark:text-white">
                                         <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
                                     </svg>
-                                    <span class="text-base font-medium text-neutral-900">Brand Systems</span>
+                                    <span class="text-base font-medium text-neutral-900 dark:text-white">Brand Systems</span>
                                 </div>
-                                <div class="bg-white border border-neutral-200/60 p-6 rounded-2xl h-full">
-                                    <ul class="space-y-3 text-[15px] text-neutral-500">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 p-6 rounded-2xl h-full">
+                                    <ul class="space-y-3 text-[15px] text-neutral-500 dark:text-neutral-400">
                                         <li>Brand Guidelines</li>
                                         <li>Logo Design & Marks</li>
                                         <li>Visual Identity</li>
@@ -730,31 +777,49 @@
                 </div>
             </section>
 
-            <!-- Pricing Section -->
+            <!-- Pricing Section with Estimator Scoper -->
             <section id="pricing" class="animate-fade-up w-full pb-0 my-12">
-                <div class="grid lg:grid-cols-12 lg:gap-8">
+                <div class="grid lg:grid-cols-12 lg:gap-8 gap-y-8">
                     <div class="lg:col-span-4 space-y-6">
-                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 tracking-tight">Simple Retainer Pricing</h2>
-                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500">One flat monthly fee. Continuous design and development execution. Zero overhead.</p>
+                        <h2 class="lg:text-4xl text-3xl font-medium text-neutral-900 dark:text-white tracking-tight">Simple Retainer Pricing</h2>
+                        <p class="text-[17px] leading-relaxed font-normal text-neutral-500 dark:text-neutral-400 font-normal">One flat monthly fee. Continuous design and development execution. Zero overhead.</p>
                     </div>
                     
                     <div class="lg:col-span-8">
-                        <div class="flex flex-col gap-4 bg-neutral-100/40 border-neutral-200 border rounded-[32px] p-2">
+                        <div class="flex flex-col gap-4 bg-neutral-100/40 dark:bg-neutral-900/20 border-neutral-200 dark:border-neutral-800 border rounded-[32px] p-2">
                             <!-- Top Pricing Card -->
-                            <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
-                                <div class="flex items-center gap-3 mb-4">
-                                    <h3 class="text-base font-semibold text-neutral-900 tracking-tight">Standard Retainer</h3>
+                            <div class="bg-white dark:bg-neutral-900 border-neutral-200/60 dark:border-neutral-800/80 border rounded-3xl p-6">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <h3 class="text-base font-semibold text-neutral-900 dark:text-white tracking-tight">Standard Retainer</h3>
                                     <span class="bg-brand-indigo/10 text-brand-indigo px-3 py-1 rounded-full text-xs font-semibold border border-brand-indigo/20">Active Partnership</span>
                                 </div>
-                                <p class="text-[15px] text-neutral-500 mb-8">Perfect for early teams getting off the ground</p>
-                                <div class="text-3xl font-semibold text-neutral-900 tracking-tight mb-4">$5,500/month</div>
+
+                                <!-- Dynamic Estimator Controls -->
+                                <div class="mb-8 p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-800/50 flex flex-col gap-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Scope Level</span>
+                                        <div class="flex bg-neutral-200 dark:bg-neutral-800 p-0.5 rounded-lg">
+                                            <button id="btn-service-design" onclick="setService('design')" class="px-3 py-1.5 rounded-md text-xs font-bold bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm transition-all duration-300 cursor-none">Design Only</button>
+                                            <button id="btn-service-dev" onclick="setService('dev')" class="px-3 py-1.5 rounded-md text-xs font-bold text-neutral-500 dark:text-neutral-400 transition-all duration-300 cursor-none">Design & Dev</button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between border-t border-neutral-150 dark:border-neutral-800/60 pt-3">
+                                        <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">Add Brand System Guidelines</span>
+                                        <button id="btn-toggle-brand" onclick="toggleBrandAddon()" class="relative inline-flex h-6 w-11 shrink-0 cursor-none rounded-full border-2 border-transparent bg-neutral-250 dark:bg-neutral-800 transition-colors duration-200 ease-in-out focus:outline-none">
+                                            <span id="brand-toggle-dot" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <p class="text-[15px] text-neutral-500 dark:text-neutral-400 mb-2 font-normal">Monthly Retainer Fee</p>
+                                <div id="display-price" class="text-4xl font-semibold text-neutral-900 dark:text-white tracking-tight mb-8 font-mono">$4,000/month</div>
 
                                 <div class="flex flex-col sm:flex-row gap-3">
-                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-neutral-900 text-white font-medium px-6 py-3.5 rounded-full hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-[15px]">
+                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-medium px-6 py-3.5 rounded-full hover:bg-neutral-800 dark:hover:bg-white transition-colors flex items-center justify-center gap-2 text-[15px] cursor-none">
                                         Start Today
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                     </a>
-                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-white text-neutral-900 border border-neutral-200 font-medium px-6 py-3.5 rounded-full hover:bg-neutral-50 transition-colors flex items-center justify-center gap-2 text-[15px]">
+                                    <a href="mailto:hello@nova.studio" class="flex-1 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-800 font-medium px-6 py-3.5 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 text-[15px] cursor-none">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
                                         Book a Call
                                     </a>
@@ -762,28 +827,28 @@
                             </div>
 
                             <!-- Features Card -->
-                            <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
+                            <div class="bg-white dark:bg-neutral-900 border-neutral-200/60 dark:border-neutral-800/80 border rounded-3xl p-6">
                                 <ul class="space-y-4">
-                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600 dark:text-neutral-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
                                             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                                             <path d="M3 6h18"></path>
                                         </svg>
-                                        <span>Priority delivery and fast response</span>
+                                        <span>Priority delivery and fast async support updates</span>
                                     </li>
-                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600 dark:text-neutral-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
                                             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                                         </svg>
                                         <span>Full stack capabilities (Web, Mobile UX, Branding)</span>
                                     </li>
-                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600 dark:text-neutral-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
                                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                         </svg>
                                         <span>Pause or cancel anytime</span>
                                     </li>
-                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600">
+                                    <li class="flex items-start gap-3 text-[15px] text-neutral-600 dark:text-neutral-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-brand-indigo shrink-0">
                                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                         </svg>
@@ -794,24 +859,24 @@
 
                             <!-- Bottom Grid -->
                             <div class="grid sm:grid-cols-2 gap-2">
-                                <div class="bg-white border-neutral-200/60 border rounded-3xl p-6">
-                                    <div class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
+                                <div class="bg-white dark:bg-neutral-900 border-neutral-200/60 dark:border-neutral-800/80 border rounded-3xl p-6">
+                                    <div class="w-8 h-8 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <rect x="6" y="4" width="4" height="16"></rect>
                                             <rect x="14" y="4" width="4" height="16"></rect>
                                         </svg>
                                     </div>
-                                    <h4 class="text-base font-medium text-neutral-900 mb-2">Pause anytime</h4>
-                                    <p class="text-[14px] leading-relaxed text-neutral-500">Put your retainer on hold whenever you want, for up to 30 days, saving any unused days.</p>
+                                    <h4 class="text-base font-medium text-neutral-900 dark:text-white mb-2">Pause anytime</h4>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">Put your retainer on hold whenever you want, for up to 30 days, saving any unused days.</p>
                                 </div>
-                                <div class="bg-white border border-neutral-200/60 rounded-3xl p-6">
-                                    <div class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
+                                <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-3xl p-6">
+                                    <div class="w-8 h-8 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center mb-4 text-brand-indigo bg-brand-indigo/5">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="m9 16 2 2 4-4"></path>
                                         </svg>
                                     </div>
-                                    <h4 class="text-base font-medium text-neutral-900 mb-2">Zero-risk start</h4>
-                                    <p class="text-[14px] leading-relaxed text-neutral-500">If you're not fully satisfied with our collaboration in the first week, we refund 75% immediately.</p>
+                                    <h4 class="text-base font-medium text-neutral-900 dark:text-white mb-2">Zero-risk start</h4>
+                                    <p class="text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-normal">If you're not fully satisfied with our collaboration in the first week, we refund 75% immediately.</p>
                                 </div>
                             </div>
                         </div>
@@ -820,88 +885,88 @@
             </section>
 
             <!-- Testimonials Section -->
-            <section id="testimonials" class="animate-scaleIn bg-[#ffffff] w-full max-w-7xl z-10 border-neutral-200/70 border rounded-3xl p-8 relative shadow-2xl">
+            <section id="testimonials" class="animate-scaleIn bg-[#ffffff] dark:bg-neutral-900 w-full max-w-7xl z-10 border-neutral-200/70 dark:border-neutral-800/80 border rounded-3xl p-8 relative shadow-2xl transition-all duration-300">
                 <!-- Header -->
                 <div class="flex flex-col pr-0 pl-0 gap-y-2">
-                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-[#000000] tracking-tighter text-left">Testimonials.</h2>
-                    <p class="sm:text-base text-sm text-zinc-400 tracking-tight mt-1">Real stories, real success. Our customers have experienced firsthand the impact of our solutions.</p>
+                    <h2 class="text-[44px] leading-[0.9] sm:text-6xl lg:text-7xl xl:text-5xl text-[#000000] dark:text-white tracking-tighter text-left font-medium">Testimonials.</h2>
+                    <p class="sm:text-base text-sm text-zinc-400 dark:text-neutral-400 tracking-tight mt-1 font-normal">Real stories, real success. Our customers have experienced firsthand the impact of our solutions.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 sm:mt-8 mt-6 items-center">
                     <div class="lg:col-span-12 relative">
                         <div class="relative overflow-hidden h-[420px] rounded-3xl mt-6">
                             <!-- Edge fades -->
-                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
-                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white dark:from-neutral-900 to-transparent z-10"></div>
+                            <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white dark:from-neutral-900 to-transparent z-10"></div>
 
                             <!-- Testimonials Rail -->
                             <div class="flex gap-6 overflow-x-auto scroll-smooth pr-6 pl-6 absolute top-0 right-0 bottom-0 left-0 items-center" style="scrollbar-width: none; -ms-overflow-style: none;" id="testimonial-rail">
                                 <!-- Card 1 -->
-                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-2 shadow-2xl">
-                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white dark:bg-neutral-950 border border-neutral-200/70 dark:border-neutral-850/80 rounded-[24px] p-8 text-neutral-900 dark:text-white backdrop-blur-sm snap-center -rotate-2 shadow-2xl hover:rotate-0 transition-transform duration-300">
+                                    <p class="text-lg sm:text-xl md:text-2xl tracking-tighter">
                                         "Nova Studio completely transformed our application UI. Our users immediately noticed the improved clarity, and our onboarding completion rate increased by 40%."
                                     </p>
                                     <div class="mt-8 flex items-center gap-3">
                                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Liam Vance" class="w-10 h-10 rounded-xl object-cover">
                                         <div>
                                             <div class="text-sm font-semibold">Liam Vance</div>
-                                            <div class="text-xs text-neutral-500">Co-founder, Clarity SaaS</div>
+                                            <div class="text-xs text-neutral-500 dark:text-neutral-400">Co-founder, Clarity SaaS</div>
                                         </div>
                                     </div>
                                 </article>
 
                                 <!-- Card 2 -->
-                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center rotate-1 shadow-2xl">
-                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white dark:bg-neutral-950 border border-neutral-200/70 dark:border-neutral-850/80 rounded-[24px] p-8 text-neutral-900 dark:text-white backdrop-blur-sm snap-center rotate-1 shadow-2xl hover:rotate-0 transition-transform duration-300">
+                                    <p class="text-lg sm:text-xl md:text-2xl tracking-tighter">
                                         "The speed of execution is incredible. Nova Studio designed our entire mobile experience in under three weeks, working hand-in-hand with our engineers."
                                     </p>
                                     <div class="mt-8 flex items-center gap-3">
                                         <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Aria Sterling" class="w-10 h-10 rounded-xl object-cover">
                                         <div>
                                             <div class="text-sm font-semibold">Aria Sterling</div>
-                                            <div class="text-xs text-neutral-500">CEO, PulseFit</div>
+                                            <div class="text-xs text-neutral-500 dark:text-neutral-400">CEO, PulseFit</div>
                                         </div>
                                     </div>
                                 </article>
 
                                 <!-- Card 3 -->
-                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-1 shadow-2xl">
-                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white dark:bg-neutral-950 border border-neutral-200/70 dark:border-neutral-850/80 rounded-[24px] p-8 text-neutral-900 dark:text-white backdrop-blur-sm snap-center -rotate-1 shadow-2xl hover:rotate-0 transition-transform duration-300">
+                                    <p class="text-lg sm:text-xl md:text-2xl tracking-tighter">
                                         "Having a top-tier design partner on a flat monthly retainer has eliminated all the friction from our shipping cycle. They are highly responsive and strategic."
                                     </p>
                                     <div class="mt-8 flex items-center gap-3">
                                         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Devon Kincaid" class="w-10 h-10 rounded-xl object-cover">
                                         <div>
                                             <div class="text-sm font-semibold">Devon Kincaid</div>
-                                            <div class="text-xs text-neutral-500">Product VP, Apex Invest</div>
+                                            <div class="text-xs text-neutral-500 dark:text-neutral-400">Product VP, Apex Invest</div>
                                         </div>
                                     </div>
                                 </article>
 
                                 <!-- Card 4 -->
-                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center rotate-2 shadow-2xl">
-                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white dark:bg-neutral-950 border border-neutral-200/70 dark:border-neutral-850/80 rounded-[24px] p-8 text-neutral-900 dark:text-white backdrop-blur-sm snap-center rotate-2 shadow-2xl hover:rotate-0 transition-transform duration-300">
+                                    <p class="text-lg sm:text-xl md:text-2xl tracking-tighter">
                                         "Our website conversion rate surged by 65% after launching our new marketing pages. Nova Studio's design and Webflow execution was absolutely flawless."
                                     </p>
                                     <div class="mt-8 flex items-center gap-3">
                                         <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Maya Lin" class="w-10 h-10 rounded-xl object-cover">
                                         <div>
                                             <div class="text-sm font-semibold">Maya Lin</div>
-                                            <div class="text-xs text-neutral-500">Head of Growth, Lumina</div>
+                                            <div class="text-xs text-neutral-500 dark:text-neutral-400">Head of Growth, Lumina</div>
                                         </div>
                                     </div>
                                 </article>
 
                                 <!-- Card 5 -->
-                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white border border-neutral-200/70 rounded-[24px] p-8 text-neutral-900 backdrop-blur-sm snap-center -rotate-3 shadow-2xl">
-                                    <p class="text-lg sm:text-xl md:text-2xl text-neutral-900 tracking-tighter">
+                                <article class="min-w-[420px] sm:min-w-[520px] max-w-[640px] bg-white dark:bg-neutral-950 border border-neutral-200/70 dark:border-neutral-850/80 rounded-[24px] p-8 text-neutral-900 dark:text-white backdrop-blur-sm snap-center -rotate-3 shadow-2xl hover:rotate-0 transition-transform duration-300">
+                                    <p class="text-lg sm:text-xl md:text-2xl tracking-tighter">
                                         "Outstanding collaboration. Daily updates, clear Figma links, and proactive suggestions. They feel like true co-founders rather than an external agency."
                                     </p>
                                     <div class="mt-8 flex items-center gap-3">
                                         <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&amp;w=200&amp;h=200&amp;fit=crop" alt="Ethan Cross" class="w-10 h-10 rounded-xl object-cover">
                                         <div>
                                             <div class="text-sm font-semibold">Ethan Cross</div>
-                                            <div class="text-xs text-neutral-500">Founder, SyncTask</div>
+                                            <div class="text-xs text-neutral-500 dark:text-neutral-400">Founder, SyncTask</div>
                                         </div>
                                     </div>
                                 </article>
@@ -909,10 +974,10 @@
 
                             <!-- Controls -->
                             <div class="absolute bottom-6 right-6 z-20 flex items-center gap-3">
-                                <button aria-label="Previous" class="hover:bg-neutral-200 transition-colors inline-flex text-neutral-900 bg-neutral-100 w-10 h-10 border-neutral-200 border rounded-full items-center justify-center" id="testimonial-prev" style="opacity: 0.5; pointer-events: none;">
+                                <button aria-label="Previous" class="hover:bg-neutral-200 dark:hover:bg-neutral-850 transition-colors inline-flex text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-850 w-10 h-10 border-neutral-200 dark:border-neutral-800 border rounded-full items-center justify-center cursor-none" id="testimonial-prev" style="opacity: 0.5; pointer-events: none;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
                                 </button>
-                                <button aria-label="Next" class="w-10 h-10 rounded-full text-white bg-neutral-900 hover:bg-neutral-800 transition-colors inline-flex items-center justify-center" id="testimonial-next" style="opacity: 1; pointer-events: auto;">
+                                <button aria-label="Next" class="w-10 h-10 rounded-full text-white dark:text-neutral-900 bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-white transition-colors inline-flex items-center justify-center cursor-none" id="testimonial-next" style="opacity: 1; pointer-events: auto;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
                                 </button>
                             </div>
@@ -923,63 +988,63 @@
 
             <!-- FAQ Section -->
             <section class="animate-fade-up lg:pr-8 lg:pt-0 w-full mb-24 gap-x-20 gap-y-20">
-                <div class="grid lg:grid-cols-12 lg:gap-8">
+                <div class="grid lg:grid-cols-12 lg:gap-8 gap-y-8">
                     <div class="lg:col-span-4 space-y-6">
-                        <h2 class="text-3xl lg:text-4xl font-medium tracking-tight text-neutral-900">Frequently Asked Questions</h2>
-                        <p class="text-[17px] text-neutral-500 leading-relaxed font-normal">
-                            Everything you need to know about our retainer and billing process. Can't find the answer you're looking for? Reach out to us directly at <a href="mailto:hello@nova.studio" class="underline underline-offset-4 text-neutral-900 hover:text-neutral-600 transition-colors font-medium">hello@nova.studio</a>.
+                        <h2 class="text-3xl lg:text-4xl font-medium tracking-tight text-neutral-900 dark:text-white">Frequently Asked Questions</h2>
+                        <p class="text-[17px] text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal">
+                            Everything you need to know about our retainer and billing process. Can't find the answer you're looking for? Reach out to us directly at <a href="mailto:hello@nova.studio" class="underline underline-offset-4 text-neutral-900 dark:text-white hover:text-neutral-600 transition-colors font-medium cursor-none">hello@nova.studio</a>.
                         </p>
                     </div>
                     <div class="lg:col-span-8">
-                        <div class="bg-neutral-100/40 border border-neutral-200 rounded-3xl p-2 gap-2 flex flex-col">
+                        <div class="bg-neutral-100/40 dark:bg-neutral-900/20 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-2 gap-2 flex flex-col">
                             <!-- FAQ Item 1 -->
-                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                            <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-2xl p-6 cursor-none group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="text-base font-medium text-neutral-900">How does the "pause" feature work?</h3>
+                                    <h3 class="text-base font-medium text-neutral-900 dark:text-white">How does the "pause" feature work?</h3>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
                                         <path d="m6 9 6 6 6-6"></path>
                                     </svg>
                                 </div>
-                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                <div class="faq-answer hidden mt-4 text-neutral-500 dark:text-neutral-400 text-[15px] leading-relaxed">
                                     If you have a slow week or don't have enough requests to fill a full month, you can pause your subscription. Our billing cycles are based on a 31-day period, meaning any unused days are saved and can be reactivated whenever you need.
                                 </div>
                             </div>
 
                             <!-- FAQ Item 2 -->
-                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                            <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-2xl p-6 cursor-none group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="text-base font-medium text-neutral-900">What is the typical turnaround time?</h3>
+                                    <h3 class="text-base font-medium text-neutral-900 dark:text-white">What is the typical turnaround time?</h3>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
                                         <path d="m6 9 6 6 6-6"></path>
                                     </svg>
                                 </div>
-                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                <div class="faq-answer hidden mt-4 text-neutral-500 dark:text-neutral-400 text-[15px] leading-relaxed">
                                     Most design requests (landing page sections, app screen updates, UI component designs) are delivered in under 48 hours. More complex features or design system rebuilds are broken down into logical daily milestones.
                                 </div>
                             </div>
 
                             <!-- FAQ Item 3 -->
-                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                            <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-2xl p-6 cursor-none group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="text-base font-medium text-neutral-900">Do you offer development services?</h3>
+                                    <h3 class="text-base font-medium text-neutral-900 dark:text-white">Do you offer development services?</h3>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
                                         <path d="m6 9 6 6 6-6"></path>
                                     </svg>
                                 </div>
-                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                <div class="faq-answer hidden mt-4 text-neutral-500 dark:text-neutral-400 text-[15px] leading-relaxed">
                                     Yes! We offer high-fidelity Webflow and Framer development as part of our package. Custom coding (React/Tailwind) is available upon request.
                                 </div>
                             </div>
 
                             <!-- FAQ Item 4 -->
-                            <div class="bg-white border border-neutral-200/60 rounded-2xl p-6 cursor-pointer group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
+                            <div class="bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-800/80 rounded-2xl p-6 cursor-none group hover:border-neutral-300 transition-colors" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180')">
                                 <div class="flex justify-between items-center">
-                                    <h3 class="text-base font-medium text-neutral-900">How do we communicate?</h3>
+                                    <h3 class="text-base font-medium text-neutral-900 dark:text-white">How do we communicate?</h3>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400 faq-icon transition-transform duration-300">
                                         <path d="m6 9 6 6 6-6"></path>
                                     </svg>
                                 </div>
-                                <div class="faq-answer hidden mt-4 text-neutral-500 text-[15px] leading-relaxed">
+                                <div class="faq-answer hidden mt-4 text-neutral-500 dark:text-neutral-400 text-[15px] leading-relaxed">
                                     We set up a private Slack channel for day-to-day asynchronous updates and use a shared Notion board to organize design tickets. We also offer optional weekly sync calls.
                                 </div>
                             </div>
@@ -991,25 +1056,25 @@
             <!-- Footer -->
             <footer class="pt-0 pb-0">
                 <div class="container lg:pl-0 lg:pr-0 mx-auto pr-0 pl-0">
-                    <div class="lg:px-10 lg:py-12 bg-white border-neutral-200 border rounded-3xl pt-10 pr-6 pb-10 pl-6 shadow-2xl">
+                    <div class="lg:px-10 lg:py-12 bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 border rounded-3xl pt-10 pr-6 pb-10 pl-6 shadow-2xl transition-all duration-300">
                         <div class="flex flex-col lg:flex-row gap-10 lg:gap-16">
                             <!-- Brand -->
                             <div class="lg:w-1/3 space-y-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-neutral-900 flex items-center justify-center text-white">
+                                    <div class="w-9 h-9 rounded-xl bg-neutral-900 dark:bg-neutral-950 flex items-center justify-center text-white">
                                         <iconify-icon icon="solar:cpu-bolt-bold-duotone" class="text-xl text-brand-violet"></iconify-icon>
                                     </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-sm font-semibold text-neutral-900 tracking-tight">nova.studio</span>
-                                        <span class="text-[11px] uppercase text-neutral-400 tracking-[0.16em]">Start with premium design</span>
+                                    <div class="flex flex-col text-neutral-900 dark:text-white">
+                                        <span class="text-sm font-semibold tracking-tight">nova.studio</span>
+                                        <span class="text-[11px] uppercase text-neutral-400 dark:text-neutral-500 tracking-[0.16em]">Start with premium design</span>
                                     </div>
                                 </div>
-                                <p class="text-sm text-neutral-500 max-w-sm">We partner with high-growth startups to design and build digital products that captivate and convert.</p>
+                                <p class="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm font-normal">We partner with high-growth startups to design and build digital products that captivate and convert.</p>
                                 <div class="flex items-center gap-3 text-neutral-500">
-                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 transition-colors">
+                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">
                                         <iconify-icon icon="simple-icons:x"></iconify-icon>
                                     </a>
-                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 transition-colors">
+                                    <a href="#" class="w-8 h-8 rounded-full border border-neutral-200 dark:border-neutral-800 flex items-center justify-center hover:border-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">
                                         <iconify-icon icon="simple-icons:linkedin"></iconify-icon>
                                     </a>
                                 </div>
@@ -1018,42 +1083,42 @@
                             <!-- Links -->
                             <div class="flex-1 grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
                                 <div class="space-y-3">
-                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 tracking-[0.16em]">Services</h3>
-                                    <ul class="space-y-2 text-neutral-600">
-                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Product Design</a></li>
-                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Web Design</a></li>
-                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Brand Identity</a></li>
-                                        <li><a href="#services" class="hover:text-neutral-900 transition-colors">Development</a></li>
+                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 dark:text-neutral-500 tracking-[0.16em]">Services</h3>
+                                    <ul class="space-y-2 text-neutral-600 dark:text-neutral-400">
+                                        <li><a href="#services" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Product Design</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Web Design</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Brand Identity</a></li>
+                                        <li><a href="#services" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Development</a></li>
                                     </ul>
                                 </div>
                                 <div class="space-y-3">
-                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 tracking-[0.16em]">Case Studies</h3>
-                                    <ul class="space-y-2 text-neutral-600">
-                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Apex Invest</a></li>
-                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">PulseFit Tracker</a></li>
-                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Clarity Workspace</a></li>
-                                        <li><a href="#work" class="hover:text-neutral-900 transition-colors">Lumina SaaS Redesign</a></li>
+                                    <h3 class="uppercase text-xs font-semibold text-neutral-400 dark:text-neutral-500 tracking-[0.16em]">Case Studies</h3>
+                                    <ul class="space-y-2 text-neutral-600 dark:text-neutral-400">
+                                        <li><a href="#work" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Apex Invest</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">PulseFit Tracker</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Clarity Workspace</a></li>
+                                        <li><a href="#work" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Lumina SaaS Redesign</a></li>
                                     </ul>
                                 </div>
                                 <div class="space-y-3">
-                                    <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">Company</h3>
-                                    <ul class="space-y-2 text-neutral-600">
-                                        <li><a href="#" class="hover:text-neutral-900 transition-colors">Studio</a></li>
-                                        <li><a href="#" class="hover:text-neutral-900 transition-colors">Careers</a></li>
-                                        <li><a href="mailto:hello@nova.studio" class="hover:text-neutral-900 transition-colors">Contact</a></li>
+                                    <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400 dark:text-neutral-500">Company</h3>
+                                    <ul class="space-y-2 text-neutral-600 dark:text-neutral-400">
+                                        <li><a href="#" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Studio</a></li>
+                                        <li><a href="#" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Careers</a></li>
+                                        <li><a href="mailto:hello@nova.studio" class="hover:text-neutral-900 dark:hover:text-white transition-colors cursor-none">Contact</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Logos + Bottom row -->
-                        <div class="mt-10 border-t border-neutral-100 pt-6 flex flex-col gap-4">
-                            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs text-neutral-400">
+                        <div class="mt-10 border-t border-neutral-100 dark:border-neutral-800 pt-6 flex flex-col gap-4">
+                            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs text-neutral-400 dark:text-neutral-500">
                                 <p>© 2026 nova.studio. All rights reserved.</p>
                                 <div class="flex flex-wrap gap-4">
-                                    <a href="#" class="hover:text-neutral-700 transition-colors">Privacy Policy</a>
-                                    <a href="#" class="hover:text-neutral-700 transition-colors">Terms of Service</a>
-                                    <a href="#" class="hover:text-neutral-700 transition-colors">Cookie Settings</a>
+                                    <a href="#" class="hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors cursor-none">Privacy Policy</a>
+                                    <a href="#" class="hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors cursor-none">Terms of Service</a>
+                                    <a href="#" class="hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors cursor-none">Cookie Settings</a>
                                 </div>
                             </div>
                         </div>
@@ -1065,6 +1130,19 @@
     </div>
 
     <script>
+        // Theme Toggling Logic
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Init Theme based on user choices or OS settings
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
         // Spotlight Effect Logic
         function handleSpotlight(e) {
             const rect = e.currentTarget.getBoundingClientRect();
@@ -1083,20 +1161,17 @@
         ];
 
         function rotateCarousel(direction) {
-            // Remove current classes
             cards.forEach(card => {
                 card.classList.remove('active', 'prev', 'next');
                 card.style.zIndex = '';
             });
 
-            // Calculate new index
             if (direction === 1) { // Next
                 currentIndex = (currentIndex + 1) % cards.length;
             } else { // Prev
                 currentIndex = (currentIndex - 1 + cards.length) % cards.length;
             }
 
-            // Assign new classes based on new index
             const activeIndex = currentIndex;
             const nextIndex = (currentIndex + 1) % cards.length;
             const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
@@ -1110,25 +1185,6 @@
         setInterval(() => {
             rotateCarousel(1);
         }, 5000);
-
-        // Case Study Carousel Logic (Null-Checked Safe Implementation)
-        let currentSlide = 0;
-        const slider = document.getElementById('case-study-slider');
-        const totalSlides = 2; 
-
-        function moveSlide(direction) {
-            if (!slider) return;
-            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
-            const offset = currentSlide * 100;
-            slider.style.transform = `translateX(-${offset}%)`;
-        }
-
-        // Auto rotate case studies every 6 seconds if element is present
-        if (slider) {
-            setInterval(() => {
-                moveSlide(1);
-            }, 6000);
-        }
 
         // Testimonial Rail Navigation Controls
         (function() {
@@ -1181,6 +1237,136 @@
                 window.addEventListener('resize', updateButtonStates);
             }
         })();
+
+        // Trailing Custom Cursor Logic
+        const cursor = document.getElementById('custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (cursor) {
+                cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+                cursor.classList.remove('hidden');
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            if (cursor) cursor.classList.add('hidden');
+        });
+
+        // Interactive morph hover targets
+        document.querySelectorAll('.spotlight-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                if (!cursor) return;
+                cursor.style.width = '70px';
+                cursor.style.height = '70px';
+                cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.9)';
+                cursor.style.color = '#fff';
+                cursor.style.border = 'none';
+                
+                // Set appropriate hover label
+                if (card.id === 'card-0' || card.id === 'card-1' || card.id === 'card-2') {
+                    cursor.innerText = 'DRAG';
+                } else {
+                    cursor.innerText = 'VIEW';
+                }
+            });
+            card.addEventListener('mouseleave', () => {
+                if (!cursor) return;
+                cursor.style.width = '32px';
+                cursor.style.height = '32px';
+                cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
+                cursor.style.border = '1px solid rgb(99, 102, 241)';
+                cursor.innerText = '';
+            });
+        });
+
+        document.querySelectorAll('a, button, [role="button"]').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (!cursor) return;
+                cursor.style.width = '12px';
+                cursor.style.height = '12px';
+                cursor.style.backgroundColor = 'rgb(99, 102, 241)';
+                cursor.style.border = 'none';
+            });
+            el.addEventListener('mouseleave', () => {
+                if (!cursor) return;
+                cursor.style.width = '32px';
+                cursor.style.height = '32px';
+                cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
+                cursor.style.border = '1px solid rgb(99, 102, 241)';
+            });
+        });
+
+        // Team availability clock widget
+        function updateTeamClock() {
+            const clockEl = document.getElementById('team-clock');
+            if (!clockEl) return;
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: false });
+            clockEl.innerText = `${timeString} local`;
+        }
+        setInterval(updateTeamClock, 1000);
+        updateTeamClock();
+
+        // Pricing Scoper Estimator Logic
+        let basePrice = 4000;
+        let brandAddon = false;
+        let currentDisplayPrice = 4000;
+
+        function setService(type) {
+            const btnDesign = document.getElementById('btn-service-design');
+            const btnDev = document.getElementById('btn-service-dev');
+            if (type === 'design') {
+                basePrice = 4000;
+                btnDesign.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm transition-all duration-300 cursor-none";
+                btnDev.className = "px-3 py-1.5 rounded-md text-xs font-bold text-neutral-500 dark:text-neutral-400 transition-all duration-300 cursor-none";
+            } else {
+                basePrice = 5500;
+                btnDev.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white shadow-sm transition-all duration-300 cursor-none";
+                btnDesign.className = "px-3 py-1.5 rounded-md text-xs font-bold text-neutral-500 dark:text-neutral-400 transition-all duration-300 cursor-none";
+            }
+            animatePriceChange();
+        }
+
+        function toggleBrandAddon() {
+            brandAddon = !brandAddon;
+            const dot = document.getElementById('brand-toggle-dot');
+            const bg = document.getElementById('btn-toggle-brand');
+            if (brandAddon) {
+                dot.style.transform = 'translateX(20px)';
+                bg.className = "relative inline-flex h-6 w-11 shrink-0 cursor-none rounded-full border-2 border-transparent bg-brand-indigo transition-colors duration-200 ease-in-out focus:outline-none";
+            } else {
+                dot.style.transform = 'translateX(0)';
+                bg.className = "relative inline-flex h-6 w-11 shrink-0 cursor-none rounded-full border-2 border-transparent bg-neutral-200 dark:bg-neutral-800 transition-colors duration-200 ease-in-out focus:outline-none";
+            }
+            animatePriceChange();
+        }
+
+        function animatePriceChange() {
+            const targetPrice = basePrice + (brandAddon ? 1000 : 0);
+            const priceEl = document.getElementById('display-price');
+            if (!priceEl) return;
+
+            const duration = 300; // ms
+            let startTime = null;
+            const startPrice = currentDisplayPrice;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const val = Math.floor(startPrice + progress * (targetPrice - startPrice));
+                priceEl.innerText = `$${val.toLocaleString()}/month`;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    currentDisplayPrice = targetPrice;
+                }
+            }
+            window.requestAnimationFrame(step);
+        }
     </script>
 </body>
 </html>
